@@ -1,0 +1,1063 @@
+{'permissions': {'can_read': True, 'can_write': True},
+ 'process_group_flow': {'breadcrumb': {'breadcrumb': {'id': '9052312d-0187-1000-ffff-ffffb6cd1bee',
+                                                      'name': 'level4_group',
+                                                      'version_control_information': None},
+                                       'id': '9052312d-0187-1000-ffff-ffffb6cd1bee',
+                                       'parent_breadcrumb': {'breadcrumb': {'id': '8fc1e1aa-0187-1000-ffff-fffffe4d8a03',
+                                                                            'name': 'level3_group',
+                                                                            'version_control_information': None},
+                                                             'id': '8fc1e1aa-0187-1000-ffff-fffffe4d8a03',
+                                                             'parent_breadcrumb': {'breadcrumb': {'id': '8fc0df69-0187-1000-ffff-ffffd3062a16',
+                                                                                                  'name': 'alpha_group',
+                                                                                                  'version_control_information': None},
+                                                                                   'id': '8fc0df69-0187-1000-ffff-ffffd3062a16',
+                                                                                   'parent_breadcrumb': {'breadcrumb': {'id': '8b83ff7c-0187-1000-99a2-2d4f791a6ad1',
+                                                                                                                        'name': 'NiFi '
+                                                                                                                                'Flow',
+                                                                                                                        'version_control_information': None},
+                                                                                                         'id': '8b83ff7c-0187-1000-99a2-2d4f791a6ad1',
+                                                                                                         'parent_breadcrumb': None,
+                                                                                                         'permissions': {'can_read': True,
+                                                                                                                         'can_write': True},
+                                                                                                         'versioned_flow_state': None},
+                                                                                   'permissions': {'can_read': True,
+                                                                                                   'can_write': True},
+                                                                                   'versioned_flow_state': None},
+                                                             'permissions': {'can_read': True,
+                                                                             'can_write': True},
+                                                             'versioned_flow_state': None},
+                                       'permissions': {'can_read': True,
+                                                       'can_write': True},
+                                       'versioned_flow_state': None},
+                        'flow': {'connections': [{'bends': [],
+                                                  'bulletins': [],
+                                                  'component': {'available_relationships': ['success'],
+                                                                'back_pressure_data_size_threshold': '1 '
+                                                                                                     'GB',
+                                                                'back_pressure_object_threshold': 10000,
+                                                                'bends': [],
+                                                                'destination': {'comments': '',
+                                                                                'exists': None,
+                                                                                'group_id': '9052312d-0187-1000-ffff-ffffb6cd1bee',
+                                                                                'id': '905326ff-0187-1000-ffff-ffffe604315e',
+                                                                                'name': 'PutFile',
+                                                                                'running': False,
+                                                                                'transmitting': None,
+                                                                                'type': 'PROCESSOR',
+                                                                                'versioned_component_id': None},
+                                                                'flow_file_expiration': '0 '
+                                                                                        'sec',
+                                                                'getz_index': None,
+                                                                'id': '905340f3-0187-1000-ffff-ffff8a99c393',
+                                                                'label_index': 1,
+                                                                'load_balance_compression': 'DO_NOT_COMPRESS',
+                                                                'load_balance_partition_attribute': '',
+                                                                'load_balance_status': 'LOAD_BALANCE_NOT_CONFIGURED',
+                                                                'load_balance_strategy': 'DO_NOT_LOAD_BALANCE',
+                                                                'name': '',
+                                                                'parent_group_id': '9052312d-0187-1000-ffff-ffffb6cd1bee',
+                                                                'position': None,
+                                                                'prioritizers': [],
+                                                                'selected_relationships': ['success'],
+                                                                'source': {'comments': '',
+                                                                           'exists': None,
+                                                                           'group_id': '9052312d-0187-1000-ffff-ffffb6cd1bee',
+                                                                           'id': '90531686-0187-1000-ffff-ffffa8c6bb35',
+                                                                           'name': 'GenerateFlowFile',
+                                                                           'running': True,
+                                                                           'transmitting': None,
+                                                                           'type': 'PROCESSOR',
+                                                                           'versioned_component_id': None},
+                                                                'versioned_component_id': None},
+                                                  'destination_group_id': '9052312d-0187-1000-ffff-ffffb6cd1bee',
+                                                  'destination_id': '905326ff-0187-1000-ffff-ffffe604315e',
+                                                  'destination_type': 'PROCESSOR',
+                                                  'disconnected_node_acknowledged': None,
+                                                  'getz_index': None,
+                                                  'id': '905340f3-0187-1000-ffff-ffff8a99c393',
+                                                  'label_index': 1,
+                                                  'permissions': {'can_read': True,
+                                                                  'can_write': True},
+                                                  'position': None,
+                                                  'revision': {'client_id': '8b8c0d3f-0187-1000-8a46-0ca28f20a1ee',
+                                                               'last_modifier': None,
+                                                               'version': 1},
+                                                  'source_group_id': '9052312d-0187-1000-ffff-ffffb6cd1bee',
+                                                  'source_id': '90531686-0187-1000-ffff-ffffa8c6bb35',
+                                                  'source_type': 'PROCESSOR',
+                                                  'status': {'aggregate_snapshot': {'bytes_in': 0,
+                                                                                    'bytes_out': 0,
+                                                                                    'bytes_queued': 0,
+                                                                                    'destination_id': None,
+                                                                                    'destination_name': 'PutFile',
+                                                                                    'flow_file_availability': 'FLOWFILE_AVAILABLE',
+                                                                                    'flow_files_in': 15,
+                                                                                    'flow_files_out': 0,
+                                                                                    'flow_files_queued': 5493,
+                                                                                    'group_id': '9052312d-0187-1000-ffff-ffffb6cd1bee',
+                                                                                    'id': '905340f3-0187-1000-ffff-ffff8a99c393',
+                                                                                    'input': '15 '
+                                                                                             '(0 '
+                                                                                             'bytes)',
+                                                                                    'name': 'success',
+                                                                                    'output': '0 '
+                                                                                              '(0 '
+                                                                                              'bytes)',
+                                                                                    'percent_use_bytes': 0,
+                                                                                    'percent_use_count': 18,
+                                                                                    'predictions': {'predicted_bytes_at_next_interval': -1,
+                                                                                                    'predicted_count_at_next_interval': 1834,
+                                                                                                    'predicted_millis_until_bytes_backpressure': -1,
+                                                                                                    'predicted_millis_until_count_backpressure': 490184621,
+                                                                                                    'predicted_percent_bytes': -1,
+                                                                                                    'predicted_percent_count': 18,
+                                                                                                    'prediction_interval_seconds': 180},
+                                                                                    'queued': '5,493 '
+                                                                                              '(0 '
+                                                                                              'bytes)',
+                                                                                    'queued_count': '5,493',
+                                                                                    'queued_size': '0 '
+                                                                                                   'bytes',
+                                                                                    'source_id': None,
+                                                                                    'source_name': 'GenerateFlowFile'},
+                                                             'destination_id': '905326ff-0187-1000-ffff-ffffe604315e',
+                                                             'destination_name': 'PutFile',
+                                                             'group_id': '9052312d-0187-1000-ffff-ffffb6cd1bee',
+                                                             'id': '905340f3-0187-1000-ffff-ffff8a99c393',
+                                                             'name': 'success',
+                                                             'node_snapshots': None,
+                                                             'source_id': '90531686-0187-1000-ffff-ffffa8c6bb35',
+                                                             'source_name': 'GenerateFlowFile',
+                                                             'stats_last_refreshed': '00:16:36 '
+                                                                                     'UTC'},
+                                                  'uri': 'https://test-nifi-management0.epsilon.a465-9q4k.cloudera.site:443/test-nifi/cdp-proxy-api/nifi-app/nifi-api/connections/905340f3-0187-1000-ffff-ffff8a99c393'}],
+                                 'funnels': [],
+                                 'input_ports': [],
+                                 'labels': [],
+                                 'output_ports': [],
+                                 'process_groups': [],
+                                 'processors': [{'bulletins': [],
+                                                 'component': {'bundle': {'artifact': 'nifi-standard-nar',
+                                                                          'group': 'org.apache.nifi',
+                                                                          'version': '1.18.0.2.2.6.0-260'},
+                                                               'config': {'annotation_data': None,
+                                                                          'auto_terminated_relationships': None,
+                                                                          'backoff_mechanism': 'PENALIZE_FLOWFILE',
+                                                                          'bulletin_level': 'WARN',
+                                                                          'comments': '',
+                                                                          'concurrently_schedulable_task_count': 1,
+                                                                          'custom_ui_url': None,
+                                                                          'default_concurrent_tasks': {'CRON_DRIVEN': '1',
+                                                                                                       'EVENT_DRIVEN': '0',
+                                                                                                       'TIMER_DRIVEN': '1'},
+                                                                          'default_scheduling_period': {'CRON_DRIVEN': '* '
+                                                                                                                       '* '
+                                                                                                                       '* '
+                                                                                                                       '* '
+                                                                                                                       '* '
+                                                                                                                       '?',
+                                                                                                        'TIMER_DRIVEN': '0 '
+                                                                                                                        'sec'},
+                                                                          'descriptors': {'Conflict Resolution Strategy': {'allowable_values': [{'allowable_value': {'description': None,
+                                                                                                                                                                     'display_name': 'replace',
+                                                                                                                                                                     'value': 'replace'},
+                                                                                                                                                 'can_read': True},
+                                                                                                                                                {'allowable_value': {'description': None,
+                                                                                                                                                                     'display_name': 'ignore',
+                                                                                                                                                                     'value': 'ignore'},
+                                                                                                                                                 'can_read': True},
+                                                                                                                                                {'allowable_value': {'description': None,
+                                                                                                                                                                     'display_name': 'fail',
+                                                                                                                                                                     'value': 'fail'},
+                                                                                                                                                 'can_read': True}],
+                                                                                                                           'default_value': 'fail',
+                                                                                                                           'dependencies': [],
+                                                                                                                           'description': 'Indicates '
+                                                                                                                                          'what '
+                                                                                                                                          'should '
+                                                                                                                                          'happen '
+                                                                                                                                          'when '
+                                                                                                                                          'a '
+                                                                                                                                          'file '
+                                                                                                                                          'with '
+                                                                                                                                          'the '
+                                                                                                                                          'same '
+                                                                                                                                          'name '
+                                                                                                                                          'already '
+                                                                                                                                          'exists '
+                                                                                                                                          'in '
+                                                                                                                                          'the '
+                                                                                                                                          'output '
+                                                                                                                                          'directory',
+                                                                                                                           'display_name': 'Conflict '
+                                                                                                                                           'Resolution '
+                                                                                                                                           'Strategy',
+                                                                                                                           'dynamic': False,
+                                                                                                                           'expression_language_scope': 'Not '
+                                                                                                                                                        'Supported',
+                                                                                                                           'identifies_controller_service': None,
+                                                                                                                           'identifies_controller_service_bundle': None,
+                                                                                                                           'name': 'Conflict '
+                                                                                                                                   'Resolution '
+                                                                                                                                   'Strategy',
+                                                                                                                           'required': True,
+                                                                                                                           'sensitive': False,
+                                                                                                                           'supports_el': False},
+                                                                                          'Create Missing Directories': {'allowable_values': [{'allowable_value': {'description': None,
+                                                                                                                                                                   'display_name': 'true',
+                                                                                                                                                                   'value': 'true'},
+                                                                                                                                               'can_read': True},
+                                                                                                                                              {'allowable_value': {'description': None,
+                                                                                                                                                                   'display_name': 'false',
+                                                                                                                                                                   'value': 'false'},
+                                                                                                                                               'can_read': True}],
+                                                                                                                         'default_value': 'true',
+                                                                                                                         'dependencies': [],
+                                                                                                                         'description': 'If '
+                                                                                                                                        'true, '
+                                                                                                                                        'then '
+                                                                                                                                        'missing '
+                                                                                                                                        'destination '
+                                                                                                                                        'directories '
+                                                                                                                                        'will '
+                                                                                                                                        'be '
+                                                                                                                                        'created. '
+                                                                                                                                        'If '
+                                                                                                                                        'false, '
+                                                                                                                                        'flowfiles '
+                                                                                                                                        'are '
+                                                                                                                                        'penalized '
+                                                                                                                                        'and '
+                                                                                                                                        'sent '
+                                                                                                                                        'to '
+                                                                                                                                        'failure.',
+                                                                                                                         'display_name': 'Create '
+                                                                                                                                         'Missing '
+                                                                                                                                         'Directories',
+                                                                                                                         'dynamic': False,
+                                                                                                                         'expression_language_scope': 'Not '
+                                                                                                                                                      'Supported',
+                                                                                                                         'identifies_controller_service': None,
+                                                                                                                         'identifies_controller_service_bundle': None,
+                                                                                                                         'name': 'Create '
+                                                                                                                                 'Missing '
+                                                                                                                                 'Directories',
+                                                                                                                         'required': True,
+                                                                                                                         'sensitive': False,
+                                                                                                                         'supports_el': False},
+                                                                                          'Directory': {'allowable_values': None,
+                                                                                                        'default_value': None,
+                                                                                                        'dependencies': [],
+                                                                                                        'description': 'The '
+                                                                                                                       'directory '
+                                                                                                                       'to '
+                                                                                                                       'which '
+                                                                                                                       'files '
+                                                                                                                       'should '
+                                                                                                                       'be '
+                                                                                                                       'written. '
+                                                                                                                       'You '
+                                                                                                                       'may '
+                                                                                                                       'use '
+                                                                                                                       'expression '
+                                                                                                                       'language '
+                                                                                                                       'such '
+                                                                                                                       'as '
+                                                                                                                       '/aa/bb/${path}',
+                                                                                                        'display_name': 'Directory',
+                                                                                                        'dynamic': False,
+                                                                                                        'expression_language_scope': 'Variable '
+                                                                                                                                     'Registry '
+                                                                                                                                     'and '
+                                                                                                                                     'FlowFile '
+                                                                                                                                     'Attributes',
+                                                                                                        'identifies_controller_service': None,
+                                                                                                        'identifies_controller_service_bundle': None,
+                                                                                                        'name': 'Directory',
+                                                                                                        'required': True,
+                                                                                                        'sensitive': False,
+                                                                                                        'supports_el': True},
+                                                                                          'Group': {'allowable_values': None,
+                                                                                                    'default_value': None,
+                                                                                                    'dependencies': [],
+                                                                                                    'description': 'Sets '
+                                                                                                                   'the '
+                                                                                                                   'group '
+                                                                                                                   'on '
+                                                                                                                   'the '
+                                                                                                                   'output '
+                                                                                                                   'file '
+                                                                                                                   'to '
+                                                                                                                   'the '
+                                                                                                                   'value '
+                                                                                                                   'of '
+                                                                                                                   'this '
+                                                                                                                   'attribute.  '
+                                                                                                                   'You '
+                                                                                                                   'may '
+                                                                                                                   'also '
+                                                                                                                   'use '
+                                                                                                                   'expression '
+                                                                                                                   'language '
+                                                                                                                   'such '
+                                                                                                                   'as '
+                                                                                                                   '${file.group}.',
+                                                                                                    'display_name': 'Group',
+                                                                                                    'dynamic': False,
+                                                                                                    'expression_language_scope': 'Variable '
+                                                                                                                                 'Registry '
+                                                                                                                                 'and '
+                                                                                                                                 'FlowFile '
+                                                                                                                                 'Attributes',
+                                                                                                    'identifies_controller_service': None,
+                                                                                                    'identifies_controller_service_bundle': None,
+                                                                                                    'name': 'Group',
+                                                                                                    'required': False,
+                                                                                                    'sensitive': False,
+                                                                                                    'supports_el': True},
+                                                                                          'Last Modified Time': {'allowable_values': None,
+                                                                                                                 'default_value': None,
+                                                                                                                 'dependencies': [],
+                                                                                                                 'description': 'Sets '
+                                                                                                                                'the '
+                                                                                                                                'lastModifiedTime '
+                                                                                                                                'on '
+                                                                                                                                'the '
+                                                                                                                                'output '
+                                                                                                                                'file '
+                                                                                                                                'to '
+                                                                                                                                'the '
+                                                                                                                                'value '
+                                                                                                                                'of '
+                                                                                                                                'this '
+                                                                                                                                'attribute.  '
+                                                                                                                                'Format '
+                                                                                                                                'must '
+                                                                                                                                'be '
+                                                                                                                                "yyyy-MM-dd'T'HH:mm:ssZ.  "
+                                                                                                                                'You '
+                                                                                                                                'may '
+                                                                                                                                'also '
+                                                                                                                                'use '
+                                                                                                                                'expression '
+                                                                                                                                'language '
+                                                                                                                                'such '
+                                                                                                                                'as '
+                                                                                                                                '${file.lastModifiedTime}.',
+                                                                                                                 'display_name': 'Last '
+                                                                                                                                 'Modified '
+                                                                                                                                 'Time',
+                                                                                                                 'dynamic': False,
+                                                                                                                 'expression_language_scope': 'Variable '
+                                                                                                                                              'Registry '
+                                                                                                                                              'and '
+                                                                                                                                              'FlowFile '
+                                                                                                                                              'Attributes',
+                                                                                                                 'identifies_controller_service': None,
+                                                                                                                 'identifies_controller_service_bundle': None,
+                                                                                                                 'name': 'Last '
+                                                                                                                         'Modified '
+                                                                                                                         'Time',
+                                                                                                                 'required': False,
+                                                                                                                 'sensitive': False,
+                                                                                                                 'supports_el': True},
+                                                                                          'Maximum File Count': {'allowable_values': None,
+                                                                                                                 'default_value': None,
+                                                                                                                 'dependencies': [],
+                                                                                                                 'description': 'Specifies '
+                                                                                                                                'the '
+                                                                                                                                'maximum '
+                                                                                                                                'number '
+                                                                                                                                'of '
+                                                                                                                                'files '
+                                                                                                                                'that '
+                                                                                                                                'can '
+                                                                                                                                'exist '
+                                                                                                                                'in '
+                                                                                                                                'the '
+                                                                                                                                'output '
+                                                                                                                                'directory',
+                                                                                                                 'display_name': 'Maximum '
+                                                                                                                                 'File '
+                                                                                                                                 'Count',
+                                                                                                                 'dynamic': False,
+                                                                                                                 'expression_language_scope': 'Not '
+                                                                                                                                              'Supported',
+                                                                                                                 'identifies_controller_service': None,
+                                                                                                                 'identifies_controller_service_bundle': None,
+                                                                                                                 'name': 'Maximum '
+                                                                                                                         'File '
+                                                                                                                         'Count',
+                                                                                                                 'required': False,
+                                                                                                                 'sensitive': False,
+                                                                                                                 'supports_el': False},
+                                                                                          'Owner': {'allowable_values': None,
+                                                                                                    'default_value': None,
+                                                                                                    'dependencies': [],
+                                                                                                    'description': 'Sets '
+                                                                                                                   'the '
+                                                                                                                   'owner '
+                                                                                                                   'on '
+                                                                                                                   'the '
+                                                                                                                   'output '
+                                                                                                                   'file '
+                                                                                                                   'to '
+                                                                                                                   'the '
+                                                                                                                   'value '
+                                                                                                                   'of '
+                                                                                                                   'this '
+                                                                                                                   'attribute.  '
+                                                                                                                   'You '
+                                                                                                                   'may '
+                                                                                                                   'also '
+                                                                                                                   'use '
+                                                                                                                   'expression '
+                                                                                                                   'language '
+                                                                                                                   'such '
+                                                                                                                   'as '
+                                                                                                                   '${file.owner}. '
+                                                                                                                   'Note '
+                                                                                                                   'on '
+                                                                                                                   'many '
+                                                                                                                   'operating '
+                                                                                                                   'systems '
+                                                                                                                   'Nifi '
+                                                                                                                   'must '
+                                                                                                                   'be '
+                                                                                                                   'running '
+                                                                                                                   'as '
+                                                                                                                   'a '
+                                                                                                                   'super-user '
+                                                                                                                   'to '
+                                                                                                                   'have '
+                                                                                                                   'the '
+                                                                                                                   'permissions '
+                                                                                                                   'to '
+                                                                                                                   'set '
+                                                                                                                   'the '
+                                                                                                                   'file '
+                                                                                                                   'owner.',
+                                                                                                    'display_name': 'Owner',
+                                                                                                    'dynamic': False,
+                                                                                                    'expression_language_scope': 'Variable '
+                                                                                                                                 'Registry '
+                                                                                                                                 'and '
+                                                                                                                                 'FlowFile '
+                                                                                                                                 'Attributes',
+                                                                                                    'identifies_controller_service': None,
+                                                                                                    'identifies_controller_service_bundle': None,
+                                                                                                    'name': 'Owner',
+                                                                                                    'required': False,
+                                                                                                    'sensitive': False,
+                                                                                                    'supports_el': True},
+                                                                                          'Permissions': {'allowable_values': None,
+                                                                                                          'default_value': None,
+                                                                                                          'dependencies': [],
+                                                                                                          'description': 'Sets '
+                                                                                                                         'the '
+                                                                                                                         'permissions '
+                                                                                                                         'on '
+                                                                                                                         'the '
+                                                                                                                         'output '
+                                                                                                                         'file '
+                                                                                                                         'to '
+                                                                                                                         'the '
+                                                                                                                         'value '
+                                                                                                                         'of '
+                                                                                                                         'this '
+                                                                                                                         'attribute.  '
+                                                                                                                         'Format '
+                                                                                                                         'must '
+                                                                                                                         'be '
+                                                                                                                         'either '
+                                                                                                                         'UNIX '
+                                                                                                                         'rwxrwxrwx '
+                                                                                                                         'with '
+                                                                                                                         'a '
+                                                                                                                         '- '
+                                                                                                                         'in '
+                                                                                                                         'place '
+                                                                                                                         'of '
+                                                                                                                         'denied '
+                                                                                                                         'permissions '
+                                                                                                                         '(e.g. '
+                                                                                                                         'rw-r--r--) '
+                                                                                                                         'or '
+                                                                                                                         'an '
+                                                                                                                         'octal '
+                                                                                                                         'number '
+                                                                                                                         '(e.g. '
+                                                                                                                         '644).  '
+                                                                                                                         'You '
+                                                                                                                         'may '
+                                                                                                                         'also '
+                                                                                                                         'use '
+                                                                                                                         'expression '
+                                                                                                                         'language '
+                                                                                                                         'such '
+                                                                                                                         'as '
+                                                                                                                         '${file.permissions}.',
+                                                                                                          'display_name': 'Permissions',
+                                                                                                          'dynamic': False,
+                                                                                                          'expression_language_scope': 'Variable '
+                                                                                                                                       'Registry '
+                                                                                                                                       'and '
+                                                                                                                                       'FlowFile '
+                                                                                                                                       'Attributes',
+                                                                                                          'identifies_controller_service': None,
+                                                                                                          'identifies_controller_service_bundle': None,
+                                                                                                          'name': 'Permissions',
+                                                                                                          'required': False,
+                                                                                                          'sensitive': False,
+                                                                                                          'supports_el': True}},
+                                                                          'execution_node': 'ALL',
+                                                                          'loss_tolerant': False,
+                                                                          'max_backoff_period': '10 '
+                                                                                                'mins',
+                                                                          'penalty_duration': '30 '
+                                                                                              'sec',
+                                                                          'properties': {'Conflict Resolution Strategy': 'fail',
+                                                                                         'Create Missing Directories': 'true',
+                                                                                         'Directory': None,
+                                                                                         'Group': None,
+                                                                                         'Last Modified Time': None,
+                                                                                         'Maximum File Count': None,
+                                                                                         'Owner': None,
+                                                                                         'Permissions': None},
+                                                                          'retried_relationships': [],
+                                                                          'retry_count': 10,
+                                                                          'run_duration_millis': 0,
+                                                                          'scheduling_period': '0 '
+                                                                                               'sec',
+                                                                          'scheduling_strategy': 'TIMER_DRIVEN',
+                                                                          'sensitive_dynamic_property_names': None,
+                                                                          'yield_duration': '1 '
+                                                                                            'sec'},
+                                                               'deprecated': False,
+                                                               'description': None,
+                                                               'execution_node_restricted': False,
+                                                               'extension_missing': False,
+                                                               'id': '905326ff-0187-1000-ffff-ffffe604315e',
+                                                               'input_requirement': 'INPUT_REQUIRED',
+                                                               'multiple_versions_available': False,
+                                                               'name': 'PutFile',
+                                                               'parent_group_id': '9052312d-0187-1000-ffff-ffffb6cd1bee',
+                                                               'persists_state': False,
+                                                               'position': {'x': 520.0,
+                                                                            'y': 904.0},
+                                                               'relationships': [{'auto_terminate': False,
+                                                                                  'description': 'Files '
+                                                                                                 'that '
+                                                                                                 'could '
+                                                                                                 'not '
+                                                                                                 'be '
+                                                                                                 'written '
+                                                                                                 'to '
+                                                                                                 'the '
+                                                                                                 'output '
+                                                                                                 'directory '
+                                                                                                 'for '
+                                                                                                 'some '
+                                                                                                 'reason '
+                                                                                                 'are '
+                                                                                                 'transferred '
+                                                                                                 'to '
+                                                                                                 'this '
+                                                                                                 'relationship',
+                                                                                  'name': 'failure',
+                                                                                  'retry': False},
+                                                                                 {'auto_terminate': False,
+                                                                                  'description': 'Files '
+                                                                                                 'that '
+                                                                                                 'have '
+                                                                                                 'been '
+                                                                                                 'successfully '
+                                                                                                 'written '
+                                                                                                 'to '
+                                                                                                 'the '
+                                                                                                 'output '
+                                                                                                 'directory '
+                                                                                                 'are '
+                                                                                                 'transferred '
+                                                                                                 'to '
+                                                                                                 'this '
+                                                                                                 'relationship',
+                                                                                  'name': 'success',
+                                                                                  'retry': False}],
+                                                               'restricted': True,
+                                                               'state': 'STOPPED',
+                                                               'style': {},
+                                                               'supports_batching': True,
+                                                               'supports_event_driven': True,
+                                                               'supports_parallel_processing': True,
+                                                               'supports_sensitive_dynamic_properties': False,
+                                                               'type': 'org.apache.nifi.processors.standard.PutFile',
+                                                               'validation_errors': ["'Relationship "
+                                                                                     "success' "
+                                                                                     'is '
+                                                                                     'invalid '
+                                                                                     'because '
+                                                                                     'Relationship '
+                                                                                     "'success' "
+                                                                                     'is '
+                                                                                     'not '
+                                                                                     'connected '
+                                                                                     'to '
+                                                                                     'any '
+                                                                                     'component '
+                                                                                     'and '
+                                                                                     'is '
+                                                                                     'not '
+                                                                                     'auto-terminated',
+                                                                                     "'Directory' "
+                                                                                     'is '
+                                                                                     'invalid '
+                                                                                     'because '
+                                                                                     'Directory '
+                                                                                     'is '
+                                                                                     'required',
+                                                                                     "'Relationship "
+                                                                                     "failure' "
+                                                                                     'is '
+                                                                                     'invalid '
+                                                                                     'because '
+                                                                                     'Relationship '
+                                                                                     "'failure' "
+                                                                                     'is '
+                                                                                     'not '
+                                                                                     'connected '
+                                                                                     'to '
+                                                                                     'any '
+                                                                                     'component '
+                                                                                     'and '
+                                                                                     'is '
+                                                                                     'not '
+                                                                                     'auto-terminated'],
+                                                               'validation_status': 'INVALID',
+                                                               'versioned_component_id': None},
+                                                 'disconnected_node_acknowledged': None,
+                                                 'id': '905326ff-0187-1000-ffff-ffffe604315e',
+                                                 'input_requirement': 'INPUT_REQUIRED',
+                                                 'operate_permissions': {'can_read': True,
+                                                                         'can_write': True},
+                                                 'permissions': {'can_read': True,
+                                                                 'can_write': True},
+                                                 'position': {'x': 520.0,
+                                                              'y': 904.0},
+                                                 'revision': {'client_id': '8b8c0d3f-0187-1000-8a46-0ca28f20a1ee',
+                                                              'last_modifier': None,
+                                                              'version': 2},
+                                                 'status': {'aggregate_snapshot': {'active_thread_count': 0,
+                                                                                   'bytes_in': 0,
+                                                                                   'bytes_out': 0,
+                                                                                   'bytes_read': 0,
+                                                                                   'bytes_written': 0,
+                                                                                   'execution_node': 'ALL',
+                                                                                   'flow_files_in': 0,
+                                                                                   'flow_files_out': 0,
+                                                                                   'group_id': '9052312d-0187-1000-ffff-ffffb6cd1bee',
+                                                                                   'id': '905326ff-0187-1000-ffff-ffffe604315e',
+                                                                                   'input': '0 '
+                                                                                            '(0 '
+                                                                                            'bytes)',
+                                                                                   'name': 'PutFile',
+                                                                                   'output': '0 '
+                                                                                             '(0 '
+                                                                                             'bytes)',
+                                                                                   'read': '0 '
+                                                                                           'bytes',
+                                                                                   'run_status': 'Invalid',
+                                                                                   'task_count': 0,
+                                                                                   'tasks': '0',
+                                                                                   'tasks_duration': '00:00:00.000',
+                                                                                   'tasks_duration_nanos': 0,
+                                                                                   'terminated_thread_count': 0,
+                                                                                   'type': 'PutFile',
+                                                                                   'written': '0 '
+                                                                                              'bytes'},
+                                                            'group_id': '9052312d-0187-1000-ffff-ffffb6cd1bee',
+                                                            'id': '905326ff-0187-1000-ffff-ffffe604315e',
+                                                            'name': 'PutFile',
+                                                            'node_snapshots': None,
+                                                            'run_status': 'Invalid',
+                                                            'stats_last_refreshed': '00:16:36 '
+                                                                                    'UTC',
+                                                            'type': None},
+                                                 'uri': 'https://test-nifi-management0.epsilon.a465-9q4k.cloudera.site:443/test-nifi/cdp-proxy-api/nifi-app/nifi-api/processors/905326ff-0187-1000-ffff-ffffe604315e'},
+                                                {'bulletins': [],
+                                                 'component': {'bundle': {'artifact': 'nifi-standard-nar',
+                                                                          'group': 'org.apache.nifi',
+                                                                          'version': '1.18.0.2.2.6.0-260'},
+                                                               'config': {'annotation_data': None,
+                                                                          'auto_terminated_relationships': None,
+                                                                          'backoff_mechanism': 'PENALIZE_FLOWFILE',
+                                                                          'bulletin_level': 'WARN',
+                                                                          'comments': '',
+                                                                          'concurrently_schedulable_task_count': 1,
+                                                                          'custom_ui_url': None,
+                                                                          'default_concurrent_tasks': {'CRON_DRIVEN': '1',
+                                                                                                       'EVENT_DRIVEN': '0',
+                                                                                                       'TIMER_DRIVEN': '1'},
+                                                                          'default_scheduling_period': {'CRON_DRIVEN': '* '
+                                                                                                                       '* '
+                                                                                                                       '* '
+                                                                                                                       '* '
+                                                                                                                       '* '
+                                                                                                                       '?',
+                                                                                                        'TIMER_DRIVEN': '0 '
+                                                                                                                        'sec'},
+                                                                          'descriptors': {'Batch Size': {'allowable_values': None,
+                                                                                                         'default_value': '1',
+                                                                                                         'dependencies': [],
+                                                                                                         'description': 'The '
+                                                                                                                        'number '
+                                                                                                                        'of '
+                                                                                                                        'FlowFiles '
+                                                                                                                        'to '
+                                                                                                                        'be '
+                                                                                                                        'transferred '
+                                                                                                                        'in '
+                                                                                                                        'each '
+                                                                                                                        'invocation',
+                                                                                                         'display_name': 'Batch '
+                                                                                                                         'Size',
+                                                                                                         'dynamic': False,
+                                                                                                         'expression_language_scope': 'Not '
+                                                                                                                                      'Supported',
+                                                                                                         'identifies_controller_service': None,
+                                                                                                         'identifies_controller_service_bundle': None,
+                                                                                                         'name': 'Batch '
+                                                                                                                 'Size',
+                                                                                                         'required': True,
+                                                                                                         'sensitive': False,
+                                                                                                         'supports_el': False},
+                                                                                          'Data Format': {'allowable_values': [{'allowable_value': {'description': None,
+                                                                                                                                                    'display_name': 'Binary',
+                                                                                                                                                    'value': 'Binary'},
+                                                                                                                                'can_read': True},
+                                                                                                                               {'allowable_value': {'description': None,
+                                                                                                                                                    'display_name': 'Text',
+                                                                                                                                                    'value': 'Text'},
+                                                                                                                                'can_read': True}],
+                                                                                                          'default_value': 'Text',
+                                                                                                          'dependencies': [],
+                                                                                                          'description': 'Specifies '
+                                                                                                                         'whether '
+                                                                                                                         'the '
+                                                                                                                         'data '
+                                                                                                                         'should '
+                                                                                                                         'be '
+                                                                                                                         'Text '
+                                                                                                                         'or '
+                                                                                                                         'Binary',
+                                                                                                          'display_name': 'Data '
+                                                                                                                          'Format',
+                                                                                                          'dynamic': False,
+                                                                                                          'expression_language_scope': 'Not '
+                                                                                                                                       'Supported',
+                                                                                                          'identifies_controller_service': None,
+                                                                                                          'identifies_controller_service_bundle': None,
+                                                                                                          'name': 'Data '
+                                                                                                                  'Format',
+                                                                                                          'required': True,
+                                                                                                          'sensitive': False,
+                                                                                                          'supports_el': False},
+                                                                                          'File Size': {'allowable_values': None,
+                                                                                                        'default_value': '0B',
+                                                                                                        'dependencies': [],
+                                                                                                        'description': 'The '
+                                                                                                                       'size '
+                                                                                                                       'of '
+                                                                                                                       'the '
+                                                                                                                       'file '
+                                                                                                                       'that '
+                                                                                                                       'will '
+                                                                                                                       'be '
+                                                                                                                       'used',
+                                                                                                        'display_name': 'File '
+                                                                                                                        'Size',
+                                                                                                        'dynamic': False,
+                                                                                                        'expression_language_scope': 'Not '
+                                                                                                                                     'Supported',
+                                                                                                        'identifies_controller_service': None,
+                                                                                                        'identifies_controller_service_bundle': None,
+                                                                                                        'name': 'File '
+                                                                                                                'Size',
+                                                                                                        'required': True,
+                                                                                                        'sensitive': False,
+                                                                                                        'supports_el': False},
+                                                                                          'Unique FlowFiles': {'allowable_values': [{'allowable_value': {'description': None,
+                                                                                                                                                         'display_name': 'true',
+                                                                                                                                                         'value': 'true'},
+                                                                                                                                     'can_read': True},
+                                                                                                                                    {'allowable_value': {'description': None,
+                                                                                                                                                         'display_name': 'false',
+                                                                                                                                                         'value': 'false'},
+                                                                                                                                     'can_read': True}],
+                                                                                                               'default_value': 'false',
+                                                                                                               'dependencies': [],
+                                                                                                               'description': 'If '
+                                                                                                                              'true, '
+                                                                                                                              'each '
+                                                                                                                              'FlowFile '
+                                                                                                                              'that '
+                                                                                                                              'is '
+                                                                                                                              'generated '
+                                                                                                                              'will '
+                                                                                                                              'be '
+                                                                                                                              'unique. '
+                                                                                                                              'If '
+                                                                                                                              'false, '
+                                                                                                                              'a '
+                                                                                                                              'random '
+                                                                                                                              'value '
+                                                                                                                              'will '
+                                                                                                                              'be '
+                                                                                                                              'generated '
+                                                                                                                              'and '
+                                                                                                                              'all '
+                                                                                                                              'FlowFiles '
+                                                                                                                              'will '
+                                                                                                                              'get '
+                                                                                                                              'the '
+                                                                                                                              'same '
+                                                                                                                              'content '
+                                                                                                                              'but '
+                                                                                                                              'this '
+                                                                                                                              'offers '
+                                                                                                                              'much '
+                                                                                                                              'higher '
+                                                                                                                              'throughput',
+                                                                                                               'display_name': 'Unique '
+                                                                                                                               'FlowFiles',
+                                                                                                               'dynamic': False,
+                                                                                                               'expression_language_scope': 'Not '
+                                                                                                                                            'Supported',
+                                                                                                               'identifies_controller_service': None,
+                                                                                                               'identifies_controller_service_bundle': None,
+                                                                                                               'name': 'Unique '
+                                                                                                                       'FlowFiles',
+                                                                                                               'required': True,
+                                                                                                               'sensitive': False,
+                                                                                                               'supports_el': False},
+                                                                                          'character-set': {'allowable_values': None,
+                                                                                                            'default_value': 'UTF-8',
+                                                                                                            'dependencies': [],
+                                                                                                            'description': 'Specifies '
+                                                                                                                           'the '
+                                                                                                                           'character '
+                                                                                                                           'set '
+                                                                                                                           'to '
+                                                                                                                           'use '
+                                                                                                                           'when '
+                                                                                                                           'writing '
+                                                                                                                           'the '
+                                                                                                                           'bytes '
+                                                                                                                           'of '
+                                                                                                                           'Custom '
+                                                                                                                           'Text '
+                                                                                                                           'to '
+                                                                                                                           'a '
+                                                                                                                           'flow '
+                                                                                                                           'file.',
+                                                                                                            'display_name': 'Character '
+                                                                                                                            'Set',
+                                                                                                            'dynamic': False,
+                                                                                                            'expression_language_scope': 'Not '
+                                                                                                                                         'Supported',
+                                                                                                            'identifies_controller_service': None,
+                                                                                                            'identifies_controller_service_bundle': None,
+                                                                                                            'name': 'character-set',
+                                                                                                            'required': True,
+                                                                                                            'sensitive': False,
+                                                                                                            'supports_el': False},
+                                                                                          'generate-ff-custom-text': {'allowable_values': None,
+                                                                                                                      'default_value': None,
+                                                                                                                      'dependencies': [],
+                                                                                                                      'description': 'If '
+                                                                                                                                     'Data '
+                                                                                                                                     'Format '
+                                                                                                                                     'is '
+                                                                                                                                     'text '
+                                                                                                                                     'and '
+                                                                                                                                     'if '
+                                                                                                                                     'Unique '
+                                                                                                                                     'FlowFiles '
+                                                                                                                                     'is '
+                                                                                                                                     'false, '
+                                                                                                                                     'then '
+                                                                                                                                     'this '
+                                                                                                                                     'custom '
+                                                                                                                                     'text '
+                                                                                                                                     'will '
+                                                                                                                                     'be '
+                                                                                                                                     'used '
+                                                                                                                                     'as '
+                                                                                                                                     'content '
+                                                                                                                                     'of '
+                                                                                                                                     'the '
+                                                                                                                                     'generated '
+                                                                                                                                     'FlowFiles '
+                                                                                                                                     'and '
+                                                                                                                                     'the '
+                                                                                                                                     'File '
+                                                                                                                                     'Size '
+                                                                                                                                     'will '
+                                                                                                                                     'be '
+                                                                                                                                     'ignored. '
+                                                                                                                                     'Finally, '
+                                                                                                                                     'if '
+                                                                                                                                     'Expression '
+                                                                                                                                     'Language '
+                                                                                                                                     'is '
+                                                                                                                                     'used, '
+                                                                                                                                     'evaluation '
+                                                                                                                                     'will '
+                                                                                                                                     'be '
+                                                                                                                                     'performed '
+                                                                                                                                     'only '
+                                                                                                                                     'once '
+                                                                                                                                     'per '
+                                                                                                                                     'batch '
+                                                                                                                                     'of '
+                                                                                                                                     'generated '
+                                                                                                                                     'FlowFiles',
+                                                                                                                      'display_name': 'Custom '
+                                                                                                                                      'Text',
+                                                                                                                      'dynamic': False,
+                                                                                                                      'expression_language_scope': 'Variable '
+                                                                                                                                                   'Registry '
+                                                                                                                                                   'Only',
+                                                                                                                      'identifies_controller_service': None,
+                                                                                                                      'identifies_controller_service_bundle': None,
+                                                                                                                      'name': 'generate-ff-custom-text',
+                                                                                                                      'required': False,
+                                                                                                                      'sensitive': False,
+                                                                                                                      'supports_el': True},
+                                                                                          'mime-type': {'allowable_values': None,
+                                                                                                        'default_value': None,
+                                                                                                        'dependencies': [],
+                                                                                                        'description': 'Specifies '
+                                                                                                                       'the '
+                                                                                                                       'value '
+                                                                                                                       'to '
+                                                                                                                       'set '
+                                                                                                                       'for '
+                                                                                                                       'the '
+                                                                                                                       '"mime.type" '
+                                                                                                                       'attribute.',
+                                                                                                        'display_name': 'Mime '
+                                                                                                                        'Type',
+                                                                                                        'dynamic': False,
+                                                                                                        'expression_language_scope': 'Not '
+                                                                                                                                     'Supported',
+                                                                                                        'identifies_controller_service': None,
+                                                                                                        'identifies_controller_service_bundle': None,
+                                                                                                        'name': 'mime-type',
+                                                                                                        'required': False,
+                                                                                                        'sensitive': False,
+                                                                                                        'supports_el': False}},
+                                                                          'execution_node': 'ALL',
+                                                                          'loss_tolerant': False,
+                                                                          'max_backoff_period': '10 '
+                                                                                                'mins',
+                                                                          'penalty_duration': '30 '
+                                                                                              'sec',
+                                                                          'properties': {'Batch Size': '1',
+                                                                                         'Data Format': 'Text',
+                                                                                         'File Size': '0B',
+                                                                                         'Unique FlowFiles': 'false',
+                                                                                         'character-set': 'UTF-8',
+                                                                                         'generate-ff-custom-text': None,
+                                                                                         'mime-type': None},
+                                                                          'retried_relationships': [],
+                                                                          'retry_count': 10,
+                                                                          'run_duration_millis': 0,
+                                                                          'scheduling_period': '1 '
+                                                                                               'min',
+                                                                          'scheduling_strategy': 'TIMER_DRIVEN',
+                                                                          'sensitive_dynamic_property_names': None,
+                                                                          'yield_duration': '1 '
+                                                                                            'sec'},
+                                                               'deprecated': False,
+                                                               'description': None,
+                                                               'execution_node_restricted': False,
+                                                               'extension_missing': False,
+                                                               'id': '90531686-0187-1000-ffff-ffffa8c6bb35',
+                                                               'input_requirement': 'INPUT_FORBIDDEN',
+                                                               'multiple_versions_available': False,
+                                                               'name': 'GenerateFlowFile',
+                                                               'parent_group_id': '9052312d-0187-1000-ffff-ffffb6cd1bee',
+                                                               'persists_state': False,
+                                                               'position': {'x': 577.9999973127387,
+                                                                            'y': 350.0000011564356},
+                                                               'relationships': [{'auto_terminate': False,
+                                                                                  'description': '',
+                                                                                  'name': 'success',
+                                                                                  'retry': False}],
+                                                               'restricted': False,
+                                                               'state': 'RUNNING',
+                                                               'style': {},
+                                                               'supports_batching': True,
+                                                               'supports_event_driven': False,
+                                                               'supports_parallel_processing': True,
+                                                               'supports_sensitive_dynamic_properties': False,
+                                                               'type': 'org.apache.nifi.processors.standard.GenerateFlowFile',
+                                                               'validation_errors': [],
+                                                               'validation_status': 'VALID',
+                                                               'versioned_component_id': None},
+                                                 'disconnected_node_acknowledged': None,
+                                                 'id': '90531686-0187-1000-ffff-ffffa8c6bb35',
+                                                 'input_requirement': 'INPUT_FORBIDDEN',
+                                                 'operate_permissions': {'can_read': True,
+                                                                         'can_write': True},
+                                                 'permissions': {'can_read': True,
+                                                                 'can_write': True},
+                                                 'position': {'x': 577.9999973127387,
+                                                              'y': 350.0000011564356},
+                                                 'revision': {'client_id': '8b8c0d3f-0187-1000-8a46-0ca28f20a1ee',
+                                                              'last_modifier': None,
+                                                              'version': 2},
+                                                 'status': {'aggregate_snapshot': {'active_thread_count': 0,
+                                                                                   'bytes_in': 0,
+                                                                                   'bytes_out': 0,
+                                                                                   'bytes_read': 0,
+                                                                                   'bytes_written': 0,
+                                                                                   'execution_node': 'ALL',
+                                                                                   'flow_files_in': 0,
+                                                                                   'flow_files_out': 15,
+                                                                                   'group_id': '9052312d-0187-1000-ffff-ffffb6cd1bee',
+                                                                                   'id': '90531686-0187-1000-ffff-ffffa8c6bb35',
+                                                                                   'input': '0 '
+                                                                                            '(0 '
+                                                                                            'bytes)',
+                                                                                   'name': 'GenerateFlowFile',
+                                                                                   'output': '15 '
+                                                                                             '(0 '
+                                                                                             'bytes)',
+                                                                                   'read': '0 '
+                                                                                           'bytes',
+                                                                                   'run_status': 'Running',
+                                                                                   'task_count': 15,
+                                                                                   'tasks': '15',
+                                                                                   'tasks_duration': '00:00:00.005',
+                                                                                   'tasks_duration_nanos': 5191382,
+                                                                                   'terminated_thread_count': 0,
+                                                                                   'type': 'GenerateFlowFile',
+                                                                                   'written': '0 '
+                                                                                              'bytes'},
+                                                            'group_id': '9052312d-0187-1000-ffff-ffffb6cd1bee',
+                                                            'id': '90531686-0187-1000-ffff-ffffa8c6bb35',
+                                                            'name': 'GenerateFlowFile',
+                                                            'node_snapshots': None,
+                                                            'run_status': 'Running',
+                                                            'stats_last_refreshed': '00:16:36 '
+                                                                                    'UTC',
+                                                            'type': None},
+                                                 'uri': 'https://test-nifi-management0.epsilon.a465-9q4k.cloudera.site:443/test-nifi/cdp-proxy-api/nifi-app/nifi-api/processors/90531686-0187-1000-ffff-ffffa8c6bb35'}],
+                                 'remote_process_groups': []},
+                        'id': '9052312d-0187-1000-ffff-ffffb6cd1bee',
+                        'last_refreshed': '00:16:36 UTC',
+                        'parameter_context': None,
+                        'parent_group_id': '8fc1e1aa-0187-1000-ffff-fffffe4d8a03',
+                        'uri': 'https://test-nifi-management0.epsilon.a465-9q4k.cloudera.site:443/test-nifi/cdp-proxy-api/nifi-app/nifi-api/flow/process-groups/9052312d-0187-1000-ffff-ffffb6cd1bee'}}
