@@ -1,0 +1,134 @@
+---
+
+- name: Test sudocmd
+  hosts: "{{ ipa_test_host | default('ipaserver') }}"
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: Ensure sudocmds are absent
+    freeipa.ansible_freeipa.ipasudocmd:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name:
+      - /usr/bin/su
+      - /usr/sbin/ifconfig
+      - /usr/sbin/iwlist
+      state: absent
+
+  - name: Ensure sudocmd is present
+    freeipa.ansible_freeipa.ipasudocmd:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: /usr/bin/su
+      state: present
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure sudocmd is present again
+    freeipa.ansible_freeipa.ipasudocmd:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: /usr/bin/su
+      state: present
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure sudocmd is absent
+    freeipa.ansible_freeipa.ipasudocmd:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: /usr/bin/su
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure sudocmd is absent again
+    freeipa.ansible_freeipa.ipasudocmd:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: /usr/bin/su
+      state: absent
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure multiple sudocmd are present
+    freeipa.ansible_freeipa.ipasudocmd:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name:
+      - /usr/sbin/ifconfig
+      - /usr/sbin/iwlist
+      state: present
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure multiple sudocmd are present again
+    freeipa.ansible_freeipa.ipasudocmd:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name:
+      - /usr/sbin/ifconfig
+      - /usr/sbin/iwlist
+      state: present
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure multiple sudocmd are absent
+    freeipa.ansible_freeipa.ipasudocmd:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name:
+      - /usr/sbin/ifconfig
+      - /usr/sbin/iwlist
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure multiple sudocmd are absent again
+    freeipa.ansible_freeipa.ipasudocmd:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name:
+      - /usr/sbin/ifconfig
+      - /usr/sbin/iwlist
+      state: absent
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure sudocmds are absent
+    freeipa.ansible_freeipa.ipasudocmd:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name:
+      - /usr/bin/su
+      - /usr/sbin/ifconfig
+      - /usr/sbin/iwlist
+      state: absent
+
+  - name: Ensure sudocmds are absent
+    freeipa.ansible_freeipa.ipasudocmd:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name:
+      - /usr/sbin/ifconfig
+      state: absent
+
+  - name: Ensure sudocmds are present
+    freeipa.ansible_freeipa.ipasudocmd:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name:
+      - /usr/sbin/iwlist
+      state: present
+
+  - name: Ensure multiple sudocmd are absent when only one was present
+    freeipa.ansible_freeipa.ipasudocmd:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name:
+      - /usr/sbin/ifconfig
+      - /usr/sbin/iwlist
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed

@@ -1,0 +1,14 @@
+---
+- name: Tests
+  hosts: ipaserver
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: Ensure service vault is present.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: svcvault
+      service: "HTTP/{{ groups.ipaserver[0] }}"
+      ipavaultpassword: MyVaultPassword123
+      state: present

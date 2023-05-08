@@ -1,0 +1,16 @@
+---
+- name: Tests
+  hosts: ipaserver
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: Ensure vault owners and ownergroups are absent.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: symvault
+      username: admin
+      owners: user01
+      ownergroups: ipausers
+      action: member
+      state: absent

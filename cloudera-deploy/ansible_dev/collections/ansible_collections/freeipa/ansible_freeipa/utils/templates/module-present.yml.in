@@ -1,0 +1,10 @@
+---
+- name: ${name^} present example
+  hosts: ipaserver
+  become: no
+
+  tasks:
+  - name: Ensure $name NAME is present
+    ipa$name:
+     name: NAME
+     # Add needed parameters here

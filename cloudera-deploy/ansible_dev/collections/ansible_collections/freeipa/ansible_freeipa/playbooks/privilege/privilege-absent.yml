@@ -1,0 +1,10 @@
+---
+- name: Privilege absent example
+  hosts: ipaserver
+  become: true
+
+  tasks:
+  - name: Ensure privilege "Broad Privilege" is absent
+    freeipa.ansible_freeipa.ipaprivilege:
+      name: Broad Privilege
+      state: absent

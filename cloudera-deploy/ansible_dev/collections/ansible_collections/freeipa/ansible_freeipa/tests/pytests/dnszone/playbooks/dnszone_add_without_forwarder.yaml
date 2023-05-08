@@ -1,0 +1,10 @@
+---
+- name: Playbook to ensure the DNS zones is present without forwarder as well.
+  hosts: ipaserver
+
+  tasks:
+  - name: Ensure DNS zone is present without forwarders
+    ipadnszone:
+      ipaadmin_password: SomeADMINpassword
+      name: 01testzone.test
+      forwarders: []

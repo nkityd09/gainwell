@@ -1,0 +1,224 @@
+---
+- name: Test service certificates
+  hosts: ipaserver
+  become: true
+
+  tasks:
+  # setup
+  - name: Generate self-signed certificates.
+    shell:
+      cmd: |
+        openssl req -x509 -newkey rsa:2048 -days 365 -nodes -keyout "private{{ item }}.key" -out "cert{{ item }}.pem" -subj '/CN=test'
+        openssl x509 -outform der -in "cert{{ item }}.pem" -out "cert{{ item }}.der"
+        base64 "cert{{ item }}.der" -w5000 > "cert{{ item }}.b64"
+    with_items: [1, 2]
+    become: no
+    delegate_to: localhost
+
+  - name: Get Domain from server name
+    set_fact:
+      ipaserver_domain: "{{ ansible_facts['fqdn'].split('.')[1:] | join ('.') }}"
+    when: ipaserver_domain is not defined
+
+  - name: Get IPv4 address prefix from server node
+    set_fact:
+      ipv4_prefix: "{{ ansible_facts['default_ipv4'].address.split('.')[:-1] |
+                       join('.') }}"
+
+  - name: Set test host FQDN
+    set_fact:
+      test_subdomain: testcert
+      test_host: "{{ 'testcert.' + ipaserver_domain }}"
+
+  - name: Host test absent
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name: "{{ test_host }}"
+      update_dns: yes
+      state: absent
+
+  - name: Host test present
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name: "{{ test_host }}"
+      ip_address: "{{ ipv4_prefix + '.201' }}"
+      update_dns: yes
+
+  - name: Ensure testing group group01 is present.
+    freeipa.ansible_freeipa.ipagroup:
+      ipaadmin_password: SomeADMINpassword
+      name: group01
+
+  - name: Ensure testing group group02 is present.
+    freeipa.ansible_freeipa.ipagroup:
+      ipaadmin_password: SomeADMINpassword
+      name: group02
+
+  - name: Ensure services are absent.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ test_host }}"
+      continue: yes
+      state: absent
+
+  # tests
+  - name: Ensure service is present
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ test_host }}"
+      certificate:
+        - "{{ lookup('file', 'cert1.b64') }}"
+      pac_type:
+        - MS-PAC
+        - PAD
+      auth_ind: otp
+      force: no
+      requires_pre_auth: yes
+      ok_as_delegate: no
+      ok_to_auth_as_delegate: no
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure service is present, again
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ test_host }}"
+      certificate:
+        - "{{ lookup('file', 'cert1.b64') }}"
+      pac_type:
+        - MS-PAC
+        - PAD
+      auth_ind: otp
+      force: no
+      requires_pre_auth: yes
+      ok_as_delegate: no
+      ok_to_auth_as_delegate: no
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure service is disabled
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ test_host }}"
+      state: disabled
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure service member certificate is present.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ test_host }}"
+      certificate:
+        - "{{ lookup('file', 'cert1.b64') }}"
+      action: member
+      state: present
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure service member certificate is present, again.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ test_host }}"
+      certificate:
+        - "{{ lookup('file', 'cert1.b64') }}"
+      action: member
+      state: present
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure service multiple member certificates are present, with duplicate.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ test_host }}"
+      certificate:
+        - "{{ lookup('file', 'cert1.b64') }}"
+        - "{{ lookup('file', 'cert2.b64') }}"
+      action: member
+      state: present
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure service member certificate is absent.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ test_host }}"
+      certificate:
+        - "{{ lookup('file', 'cert1.b64') }}"
+      action: member
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure service member certificate is absent, again.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ test_host }}"
+      certificate:
+        - "{{ lookup('file', 'cert1.b64') }}"
+      action: member
+      state: absent
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure service member certificates are absent.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ test_host }}"
+      certificate:
+        - "{{ lookup('file', 'cert1.b64') }}"
+        - "{{ lookup('file', 'cert2.b64') }}"
+      action: member
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure service multiple member certificates is present.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ test_host }}"
+      certificate:
+        - "{{ lookup('file', 'cert1.b64') }}"
+      action: member
+      state: present
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure service is disabled
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ test_host }}"
+      state: disabled
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure service is disabled, again.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ test_host }}"
+      state: disabled
+    register: result
+    failed_when: result.changed or result.failed
+
+  # cleanup
+  - name: Ensure services are absent.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ test_host }}"
+      continue: yes
+      state: absent
+
+  - name: Ensure host is absent
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name: "{{ test_host }}"
+      update_dns: yes
+      state: absent
+
+  - name: Remove certificate files.
+    shell:
+      cmd: rm -f "private{{ item }}.key" "cert{{ item }}.pem" "cert{{ item }}.der" "cert{{ item }}.b64"
+    with_items: [1, 2]
+    become: no
+    delegate_to: localhost
+    args:
+      warn: no  # suppres warning for not using the `file` module.

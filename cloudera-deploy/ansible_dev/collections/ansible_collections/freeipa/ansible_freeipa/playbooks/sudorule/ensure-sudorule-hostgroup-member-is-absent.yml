@@ -1,0 +1,14 @@
+---
+- name: Tests
+  hosts: ipaserver
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: Ensure hostgroup 'cluster' is absent in sudorule
+    freeipa.ansible_freeipa.ipasudorule:
+      ipaadmin_password: SomeADMINpassword
+      name: testrule1
+      hostgroup: cluster
+      action: member
+      state: absent

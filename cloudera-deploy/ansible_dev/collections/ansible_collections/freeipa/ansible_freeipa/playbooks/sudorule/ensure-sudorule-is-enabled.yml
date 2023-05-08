@@ -1,0 +1,11 @@
+---
+- name: Tests
+  hosts: ipaserver
+  become: true
+
+  tasks:
+  - name: Ensure sudorule command is enabled
+    freeipa.ansible_freeipa.ipasudorule:
+      ipaadmin_password: SomeADMINpassword
+      name: testrule1
+      state: enabled

@@ -1,0 +1,115 @@
+---
+- name: Test automountlocation
+  hosts: "{{ ipa_test_host | default('ipaserver') }}"
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: ensure automountlocation TestLocations are absent before testing
+    freeipa.ansible_freeipa.ipaautomountlocation:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name:
+      - TestLocation_01
+      - TestLocation_02
+      state: absent
+
+  - name: ensure empty automountlocation does nothing
+    freeipa.ansible_freeipa.ipaautomountlocation:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: []
+      state: present
+    register: result
+    failed_when: not result.failed or "At least one location must be provided" not in result.msg
+
+  - name: ensure empty automountlocation does nothing on absent
+    freeipa.ansible_freeipa.ipaautomountlocation:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: []
+      state: absent
+    register: result
+    failed_when: not result.failed or "At least one location must be provided" not in result.msg
+
+  - name: ensure automountlocation TestLocation is present
+    freeipa.ansible_freeipa.ipaautomountlocation:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: TestLocation_01
+      state: present
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: ensure automountlocation TestLocation is present again
+    freeipa.ansible_freeipa.ipaautomountlocation:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: TestLocation_01
+      state: present
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: ensure automountlocation TestLocation is absent
+    freeipa.ansible_freeipa.ipaautomountlocation:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: TestLocation_01
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: ensure automountlocation TestLocation is absent again
+    freeipa.ansible_freeipa.ipaautomountlocation:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: TestLocation_01
+      state: absent
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: ensure a list of automountlocations are present
+    freeipa.ansible_freeipa.ipaautomountlocation:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name:
+      - TestLocation_01
+      - TestLocation_02
+      state: present
+    register: result
+    failed_when: result.failed or not result.changed
+
+  - name: ensure a list of automountlocations exist
+    freeipa.ansible_freeipa.ipaautomountlocation:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name:
+      - TestLocation_01
+      - TestLocation_02
+      state: present
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: ensure a list of automountlocations are absent
+    freeipa.ansible_freeipa.ipaautomountlocation:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name:
+      - TestLocation_01
+      - TestLocation_02
+      state: absent
+    register: result
+    failed_when: result.failed or not result.changed
+
+  - name: ensure multiple automountlocations are absent
+    freeipa.ansible_freeipa.ipaautomountlocation:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name:
+      - TestLocation_01
+      - TestLocation_02
+      - TestLocation_03
+      - TestLocation_04
+      state: absent
+    register: result
+    failed_when: result.changed or result.failed

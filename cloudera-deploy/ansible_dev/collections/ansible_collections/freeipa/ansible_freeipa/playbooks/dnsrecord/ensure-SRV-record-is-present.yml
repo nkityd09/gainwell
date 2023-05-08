@@ -1,0 +1,15 @@
+---
+- name: Playbook to manage DNS records.
+  hosts: ipaserver
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: Ensure a SRV record is present
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: _kerberos._udp.example.com
+      record_type: 'SRV'
+      record_value: '10 50 88 ipa.example.com'
+      zone_name: example.com
+      state: present

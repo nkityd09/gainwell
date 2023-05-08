@@ -1,0 +1,12 @@
+---
+- name: Host member managedby_host present
+  hosts: ipaserver
+  become: true
+
+  tasks:
+  - name: Ensure host member managedby_host 'server.example.com' is present
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name: host01.example.com
+      managedby_host: server.example.com
+      action: member

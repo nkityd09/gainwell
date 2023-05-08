@@ -1,0 +1,14 @@
+---
+- name: Service member principal absent
+  hosts: ipaserver
+  become: true
+
+  tasks:
+  - name: Service HTTP/www.example.com member principals host/test.example.com absent
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: HTTP/www.example.com
+      principal:
+        - host/test.example.com
+      action: member
+      state: absent

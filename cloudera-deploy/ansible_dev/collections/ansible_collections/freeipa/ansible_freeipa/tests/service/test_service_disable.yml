@@ -1,0 +1,110 @@
+# Due to not having some Ansible modules for IPA, some tasks are executed
+# in this playbook using the `shell` module, as a Kerberos tikcket is needed
+# for these tasks.
+# The Kerberos cache is cleaned in the end, so you might need to `kinit` on
+# the testing target after running this playbook.
+---
+- name: Playbook to manage IPA service.
+  hosts: ipaserver
+  become: yes
+  gather_facts: yes
+
+  environment:
+    KRB5CCNAME: test_service_disable_ccache
+
+  tasks:
+  - name: Get Kerberos ticket for `admin`.
+    shell: echo SomeADMINpassword | kinit -c ${KRB5CCNAME} admin
+
+  - name: Generate self-signed certificates.
+    shell:
+      cmd: |
+        openssl req -x509 -newkey rsa:2048 -days 365 -nodes -keyout "private{{ item }}.key" -out "cert{{ item }}.pem" -subj '/CN=test'
+        openssl x509 -outform der -in "cert{{ item }}.pem" -out "cert{{ item }}.der"
+        base64 "cert{{ item }}.der" -w5000 > "cert{{ item }}.b64"
+    with_items: [1]
+    become: no
+    delegate_to: localhost
+
+  - name: Ensure service is absent
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "mysvc1/{{ ansible_facts['fqdn'] }}"
+      state: absent
+
+  - name: Ensure service is present
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "mysvc1/{{ ansible_facts['fqdn'] }}"
+      certificate:
+      - "{{ lookup('file', 'cert1.b64', rstrip=False) }}"
+      force: no
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Obtain keytab
+    shell: ipa-getkeytab -s "{{ ansible_facts['fqdn'] }}" -p "mysvc1/{{ ansible_facts['fqdn'] }}" -k mysvc1.keytab
+
+  - name: Verify keytab
+    shell: ipa service-find "mysvc1/{{ ansible_facts['fqdn'] }}"
+    register: result
+    failed_when: result.failed or result.stdout | regex_search(" Keytab. true")
+
+  - name: Ensure service is disabled
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "mysvc1/{{ ansible_facts['fqdn'] }}"
+      state: disabled
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Verify keytab
+    shell: ipa service-find "mysvc1/{{ ansible_facts['fqdn'] }}"
+    register: result
+    failed_when: result.failed or result.stdout | regex_search(" Keytab. true")
+
+  - name: Obtain keytab
+    shell: ipa-getkeytab -s "{{ ansible_facts['fqdn'] }}" -p "mysvc1/{{ ansible_facts['fqdn'] }}" -k mysvc1.keytab
+
+  - name: Verify keytab
+    shell: ipa service-find "mysvc1/{{ ansible_facts['fqdn'] }}"
+    register: result
+    failed_when: result.failed or result.stdout | regex_search(" Keytab. true")
+
+  - name: Ensure service is disabled
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "mysvc1/{{ ansible_facts['fqdn'] }}"
+      state: disabled
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Verify keytab
+    shell: ipa service-find "mysvc1/{{ ansible_facts['fqdn'] }}"
+    register: result
+    failed_when: result.failed or result.stdout | regex_search(" Keytab. true")
+
+  - name: Ensure service is disabled, with no keytab.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "mysvc1/{{ ansible_facts['fqdn'] }}"
+      state: disabled
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure service is absent
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "mysvc1/{{ ansible_facts['fqdn'] }}"
+
+  - name: Destroy Kerberos tickets.
+    shell: kdestroy -A -q -c ${KRB5CCNAME}
+
+  - name: Remove certificate files.
+    shell:
+      cmd: rm -f "private{{ item }}.key" "cert{{ item }}.pem" "cert{{ item }}.der" "cert{{ item }}.b64"
+    with_items: [1]
+    become: no
+    delegate_to: localhost
+    args:
+      warn: no  # suppres warning for not using the `file` module.

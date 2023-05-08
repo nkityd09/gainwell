@@ -1,0 +1,12 @@
+---
+- name: Playbook to handle users
+  hosts: ipaserver
+  become: true
+
+  tasks:
+  - name: Delete and preserve user pinky
+    freeipa.ansible_freeipa.ipauser:
+      ipaadmin_password: SomeADMINpassword
+      name: pinky
+      preserve: yes
+      state: absent

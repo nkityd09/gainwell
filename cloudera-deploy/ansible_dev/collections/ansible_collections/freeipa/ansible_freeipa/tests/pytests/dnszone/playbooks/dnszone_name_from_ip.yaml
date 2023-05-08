@@ -1,0 +1,9 @@
+---
+- name: Playbook to ensure reverse zone is added by the IP..
+  hosts: ipaserver
+
+  tasks:
+  - name: Ensure a reverse DNS Zone with name inferred form an IP address
+    ipadnszone:
+      ipaadmin_password: SomeADMINpassword
+      name_from_ip: 192.8.2.0/22

@@ -1,0 +1,22 @@
+---
+- name: Playbook to handle sudocmdgroups
+  hosts: ipaserver
+  become: true
+
+  tasks:
+  - name: Ensure sudo commands are present
+    freeipa.ansible_freeipa.ipasudocmd:
+      ipaadmin_password: SomeADMINpassword
+      name:
+      - /usr/sbin/ifconfig
+      - /usr/sbin/iwlist
+      state: present
+
+  - name: Ensure sudocmdgroup is present with sudo commands.
+    freeipa.ansible_freeipa.ipasudocmdgroup:
+     ipaadmin_password: SomeADMINpassword
+     name: network
+     sudocmd:
+     - /usr/sbin/ifconfig
+     - /usr/sbin/iwlist
+     action: member

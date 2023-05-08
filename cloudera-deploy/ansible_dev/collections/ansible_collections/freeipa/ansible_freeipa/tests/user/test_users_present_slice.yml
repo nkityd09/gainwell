@@ -1,0 +1,23 @@
+---
+- name: Include create_users_json.yml
+  import_playbook: create_users_json.yml
+
+- name: Test users present slice
+  hosts: ipaserver
+  become: true
+  gather_facts: false
+
+  vars:
+    slice_size: 500
+  tasks:
+  - name: Include users.json
+    include_vars:
+      file: users.json  # noqa 505
+  - name: Size of users slice.
+    debug:
+      msg: "{{ users | length }}"
+  - name: Users present
+    freeipa.ansible_freeipa.ipauser:
+      ipaadmin_password: SomeADMINpassword
+      users: "{{ users[item:item+slice_size] }}"
+    loop: "{{ range(0,users | length, slice_size) | list }}"

@@ -1,0 +1,11 @@
+---
+- name: Playbook to disable DNS zone
+  hosts: ipaserver
+  become: true
+
+  tasks:
+  - name: Disable zone.
+    freeipa.ansible_freeipa.ipadnszone:
+      ipaadmin_password: SomeADMINpassword
+      name: testzone.local
+      state: disabled

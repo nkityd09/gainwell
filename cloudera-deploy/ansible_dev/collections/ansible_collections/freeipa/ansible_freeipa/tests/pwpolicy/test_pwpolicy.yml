@@ -1,0 +1,119 @@
+---
+- name: Test pwpolicy
+  hosts: "{{ ipa_test_host | default('ipaserver') }}"
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: Ensure maxlife of 90 for global_policy
+    freeipa.ansible_freeipa.ipapwpolicy:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      maxlife: 90
+
+  - name: Ensure absence of group ops
+    freeipa.ansible_freeipa.ipagroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: ops
+      state: absent
+
+  - name: Ensure absence of pwpolicies for group ops
+    freeipa.ansible_freeipa.ipapwpolicy:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: ops
+      state: absent
+
+  - name: Ensure presence of group ops
+    freeipa.ansible_freeipa.ipagroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: ops
+      state: present
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure presence of pwpolicies for group ops
+    freeipa.ansible_freeipa.ipapwpolicy:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: ops
+      minlife: 7
+      maxlife: 49
+      history: 5
+      priority: 1
+      lockouttime: 300
+      minlength: 8
+      minclasses: 5
+      maxfail: 3
+      failinterval: 5
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure presence of pwpolicies for group ops again
+    freeipa.ansible_freeipa.ipapwpolicy:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: ops
+      minlife: 7
+      maxlife: 49
+      history: 5
+      priority: 1
+      lockouttime: 300
+      minlength: 8
+      minclasses: 5
+      maxfail: 3
+      failinterval: 5
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure maxlife of 49 for global_policy
+    freeipa.ansible_freeipa.ipapwpolicy:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      maxlife: 49
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure maxlife of 49 for global_policy again
+    freeipa.ansible_freeipa.ipapwpolicy:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      maxlife: 49
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure absence of pwpoliciy global_policy will fail
+    freeipa.ansible_freeipa.ipapwpolicy:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      state: absent
+    register: result
+    failed_when: not result.failed or "'global_policy' can not be made absent." not in result.msg
+
+  - name: Ensure absence of pwpolicies for group ops
+    freeipa.ansible_freeipa.ipapwpolicy:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: ops
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure maxlife of 90 for global_policy
+    freeipa.ansible_freeipa.ipapwpolicy:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      maxlife: 90
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure absence of pwpolicies for group ops
+    freeipa.ansible_freeipa.ipapwpolicy:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: ops
+      state: absent
+    register: result
+    failed_when: result.changed or result.failed

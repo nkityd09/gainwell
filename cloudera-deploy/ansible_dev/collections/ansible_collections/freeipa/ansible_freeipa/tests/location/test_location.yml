@@ -1,0 +1,80 @@
+---
+- name: Test location
+  hosts: "{{ ipa_test_host | default('ipaserver') }}"
+  become: true
+
+  tasks:
+
+  # CLEANUP TEST ITEMS
+
+  - name: Ensure location my_location1 is absent
+    freeipa.ansible_freeipa.ipalocation:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: my_location1
+      state: absent
+
+  # CREATE TEST ITEMS
+
+  # TESTS
+
+  - name: Ensure location my_location1 is present
+    freeipa.ansible_freeipa.ipalocation:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: my_location1
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure location my_location1 is present again
+    freeipa.ansible_freeipa.ipalocation:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: my_location1
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure location my_location1 is present with description
+    freeipa.ansible_freeipa.ipalocation:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: my_location1
+      description: My Location 1
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure location my_location1 is present again with description
+    freeipa.ansible_freeipa.ipalocation:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: my_location1
+      description: My Location 1
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure location my_location1 is absent
+    freeipa.ansible_freeipa.ipalocation:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: my_location1
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure location my_location1 is absent again
+    freeipa.ansible_freeipa.ipalocation:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: my_location1
+      state: absent
+    register: result
+    failed_when: result.changed or result.failed
+
+  # CLEANUP TEST ITEMS
+
+  - name: Ensure location my_location1 is absent
+    freeipa.ansible_freeipa.ipalocation:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: my_location1
+      state: absent

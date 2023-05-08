@@ -1,0 +1,130 @@
+---
+- name: Test host principal
+  hosts: ipaserver
+  become: true
+
+  tasks:
+  - name: Get Domain from server name
+    set_fact:
+      ipaserver_domain: "{{ ansible_facts['fqdn'].split('.')[1:] | join ('.') }}"
+    when: ipaserver_domain is not defined
+
+  - name: Get Realm from server name
+    set_fact:
+      ipaserver_realm: "{{ ansible_facts['fqdn'].split('.')[1:] | join ('.') | upper }}"
+    when: ipaserver_realm is not defined
+
+  - name: Set host1_fqdn
+    set_fact:
+      host1_fqdn: "{{ 'host1.' + ipaserver_domain }}"
+
+  - name: Host host1 absent
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name:
+      - "{{ host1_fqdn }}"
+      update_dns: yes
+      state: absent
+
+  - name: Host host1... present with principal host/testhost1...
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name: "{{ host1_fqdn }}"
+      principal:
+      - "{{ 'host/testhost1.' + ipaserver_domain + '@' + ipaserver_realm }}"
+      force: yes
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Host host1... principal host/host1... present (existing already)
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name: "{{ host1_fqdn }}"
+      principal:
+      - "{{ 'host/host1.' + ipaserver_domain + '@' + ipaserver_realm }}"
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Host host1... principal host/testhost1... present again
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name: "{{ host1_fqdn }}"
+      principal: "{{ 'host/testhost1.' + ipaserver_domain + '@' + ipaserver_realm }}"
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Host host1... principal host/testhost1... absent
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name: "{{ host1_fqdn }}"
+      principal: "{{ 'host/testhost1.' + ipaserver_domain + '@' + ipaserver_realm }}"
+      action: member
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Host host1... principal host/testhost1... absent again
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name: "{{ host1_fqdn }}"
+      principal: "{{ 'host/testhost1.' + ipaserver_domain + '@' + ipaserver_realm }}"
+      action: member
+      state: absent
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Host host1... principal host/testhost1... and host/myhost1... present
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name: "{{ host1_fqdn }}"
+      principal:
+      - "{{ 'host/testhost1.' + ipaserver_domain + '@' + ipaserver_realm }}"
+      - "{{ 'host/myhost1.' + ipaserver_domain + '@' + ipaserver_realm }}"
+      action: member
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Host host1... principal host/testhost1... and host/myhost1... present again
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name: "{{ host1_fqdn }}"
+      principal:
+      - "{{ 'host/testhost1.' + ipaserver_domain + '@' + ipaserver_realm }}"
+      - "{{ 'host/myhost1.' + ipaserver_domain + '@' + ipaserver_realm }}"
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Host host1... principal host/testhost1... and host/myhost1... absent
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name: "{{ host1_fqdn }}"
+      principal:
+      - "{{ 'host/testhost1.' + ipaserver_domain + '@' + ipaserver_realm }}"
+      - "{{ 'host/myhost1.' + ipaserver_domain + '@' + ipaserver_realm }}"
+      action: member
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Host host1... principal host/testhost1... and host/myhost1... absent again
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name: "{{ host1_fqdn }}"
+      principal:
+      - "{{ 'host/testhost1.' + ipaserver_domain + '@' + ipaserver_realm }}"
+      - "{{ 'host/myhost1.' + ipaserver_domain + '@' + ipaserver_realm }}"
+      action: member
+      state: absent
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Host host1... absent
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name:
+      - "{{ host1_fqdn }}"
+      update_dns: yes
+      state: absent

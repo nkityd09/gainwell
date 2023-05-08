@@ -1,0 +1,10 @@
+---
+- name: Location present test
+  hosts: ipaserver
+  become: true
+
+  tasks:
+  - name: Ensure location my_location1 is present
+    freeipa.ansible_freeipa.ipalocation:
+      ipaadmin_password: SomeADMINpassword
+      name: my_location1

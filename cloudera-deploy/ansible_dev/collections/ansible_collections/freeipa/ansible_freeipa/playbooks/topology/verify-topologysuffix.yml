@@ -1,0 +1,11 @@
+---
+- name: Playbook to handle topologysuffix
+  hosts: ipaserver
+  become: true
+
+  tasks:
+  - name: Verify topology suffix
+    freeipa.ansible_freeipa.ipatopologysuffix:
+      ipaadmin_password: SomeADMINpassword
+      suffix: domain
+      state: verified

@@ -1,0 +1,13 @@
+---
+- name: Selfservice member present
+  hosts: ipaserver
+  become: true
+
+  tasks:
+  - name: Ensure selfservice "basic manager attributes" member attribute departmentnumber is present
+    freeipa.ansible_freeipa.ipaselfservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "basic manager attributes"
+      attribute:
+      - departmentnumber
+      action: member

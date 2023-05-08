@@ -1,0 +1,302 @@
+---
+- name: Test vault
+  hosts: ipaserver
+  become: true
+  # Need to gather facts for ansible_env.
+  gather_facts: true
+
+  tasks:
+  - name: Setup testing environment.
+    import_tasks: env_setup.yml
+
+  - name: Ensure asymmetric vault is present
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      vault_type: asymmetric
+      public_key: "{{ lookup('file', 'A_public.b64') }}"
+    register: result
+    failed_when: result.failed or not result.changed
+
+  - name: Ensure asymmetric vault is present, again
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      vault_type: asymmetric
+      public_key: "{{ lookup('file', 'A_public.b64') }}"
+    register: result
+    failed_when: result.failed or result.changed
+
+  - name: Archive data to asymmetric vault.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      vault_data: SomeValue
+    register: result
+    failed_when: result.failed or not result.changed
+
+  - name: Retrieve data from asymmetric vault using key A.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      private_key: "{{ lookup('file', 'A_private.b64') }}"
+      state: retrieved
+    register: result
+    failed_when: result.failed or result.changed or result.vault.data != 'SomeValue'
+
+  - name: Change asymmetric vault key to B.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      vault_type: asymmetric
+      public_key: "{{ lookup('file', 'B_public.b64') }}"
+      private_key: "{{ lookup('file', 'A_private.b64') }}"
+    register: result
+    failed_when: result.failed or not result.changed
+
+  - name: Retrieve data from asymmetric vault using key B.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      private_key: "{{ lookup('file', 'B_private.b64') }}"
+      state: retrieved
+    register: result
+    failed_when: result.failed or result.changed or result.vault.data != 'SomeValue'
+
+  - name: Change asymmetric vault key to A, using key_file
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      vault_type: asymmetric
+      public_key_file: "{{ ansible_facts['env'].HOME }}/A_public.pem"
+      private_key: "{{ lookup('file', 'B_private.b64') }}"
+    register: result
+    failed_when: result.failed or not result.changed
+
+  - name: Retrieve data from asymmetric vault using key A, with key_file.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      private_key_file: "{{ ansible_facts['env'].HOME }}/A_private.pem"
+      state: retrieved
+    register: result
+    failed_when: result.failed or result.changed or result.vault.data != 'SomeValue'
+
+  - name: Change asymmetric vault key to B key, using key_files
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      vault_type: asymmetric
+      public_key_file: "{{ ansible_facts['env'].HOME }}/B_public.pem"
+      private_key_file: "{{ ansible_facts['env'].HOME }}/A_private.pem"
+    register: result
+    failed_when: result.failed or not result.changed
+
+  - name: Retrieve data from asymmetric vault, using key B.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      private_key: "{{ lookup('file', 'B_private.b64') }}"
+      state: retrieved
+    register: result
+    failed_when: result.failed or result.changed or result.vault.data != 'SomeValue'
+
+  - name: Change asymmetric vault key to A, without specifying vault_type.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      vault_type: asymmetric
+      public_key: "{{ lookup('file', 'A_public.b64') }}"
+      private_key: "{{ lookup('file', 'B_private.b64') }}"
+    register: result
+    failed_when: result.failed or not result.changed
+
+  - name: Change asymmetric vault key to B, with key files, without specifying vault_type.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      public_key_file: "{{ ansible_facts['env'].HOME }}/B_public.pem"
+      private_key_file: "{{ ansible_facts['env'].HOME }}/A_private.pem"
+    register: result
+    failed_when: result.failed or not result.changed
+
+  - name: Archive data to asymmetric vault, matching `no_log` field.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      vault_data: SomeADMINpassword
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Retrieve data from asymmetric vault.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      private_key: "{{ lookup('file', 'B_private.b64') }}"
+      state: retrieved
+    register: result
+    failed_when: result.vault.data != 'SomeADMINpassword' or result.changed or result.failed
+
+  - name: Change data in asymmetric vault
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      data: Hello World.
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Retrieve changed data from asymmetric vault.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      private_key: "{{ lookup('file', 'B_private.b64') }}"
+      state: retrieved
+    register: result
+    failed_when: result.vault.data != 'Hello World.' or result.changed or result.failed
+
+  - name: Retrieve data from asymmetric vault into file {{ ansible_facts['env'].HOME }}/data.txt.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      out: "{{ ansible_facts['env'].HOME }}/data.txt"
+      private_key: "{{ lookup('file', 'B_private.b64') }}"
+      state: retrieved
+    register: result
+    failed_when: result.changed or result.failed or (result.vault.data | default(false))
+
+  - name: Verify retrieved data.
+    slurp:
+      src: "{{ ansible_facts['env'].HOME }}/data.txt"
+    register: slurpfile
+    failed_when: slurpfile['content'] | b64decode != 'Hello World.'
+
+  - name: Archive data with non-ASCII characters to asymmetric vault
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      data: The world of π is half rounded.
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Retrieve data from asymmetric vault.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      private_key: "{{ lookup('file', 'B_private.b64') }}"
+      state: retrieved
+    register: result
+    failed_when: result.vault.data != 'The world of π is half rounded.' or result.changed or result.failed
+
+  - name: Archive data in asymmetric vault, from file.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      vault_type: asymmetric
+      in: "{{ ansible_facts['env'].HOME }}/in.txt"
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Retrieve data from asymmetric vault.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      private_key: "{{ lookup('file', 'B_private.b64') }}"
+      state: retrieved
+    register: result
+    failed_when: result.vault.data != 'Another World.' or result.changed or result.failed
+
+  - name: Archive data with single character to asymmetric vault
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      data: c
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Retrieve data from asymmetric vault.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      private_key: "{{ lookup('file', 'B_private.b64') }}"
+      state: retrieved
+    register: result
+    failed_when: result.vault.data != 'c' or result.changed or result.failed
+
+  - name: Ensure asymmetric vault is absent
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure asymmetric vault is absent, again
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      state: absent
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure asymmetric vault is present, with public key from file.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      public_key_file: "{{ ansible_facts['env'].HOME }}/B_public.pem"
+      vault_type: asymmetric
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure asymmetric vault is present, with password from file, again.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      public_key_file: "{{ ansible_facts['env'].HOME }}/B_public.pem"
+      vault_type: asymmetric
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Archive data to asymmetric vault
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      data: Hello World.
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Retrieve data from asymmetric vault.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      private_key: "{{ lookup('file', 'B_private.b64') }}"
+      state: retrieved
+    register: result
+    failed_when: result.vault.data != 'Hello World.' or result.changed or result.failed
+
+  - name: Retrieve data from asymmetric vault, with password file.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      private_key_file: "{{ ansible_facts['env'].HOME }}/B_private.pem"
+      state: retrieved
+    register: result
+    failed_when: result.vault.data != 'Hello World.' or result.changed or result.failed
+
+  - name: Ensure asymmetric vault is absent
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure asymmetric vault is absent, again
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      state: absent
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Cleanup testing environment.
+    import_tasks: env_cleanup.yml

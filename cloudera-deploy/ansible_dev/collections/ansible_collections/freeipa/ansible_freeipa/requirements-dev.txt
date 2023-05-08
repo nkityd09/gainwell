@@ -1,0 +1,5 @@
+-r requirements-tests.txt
+ipdb
+pre-commit
+flake8-bugbear
+pylint==2.10.2
