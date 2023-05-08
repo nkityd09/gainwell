@@ -1,0 +1,47 @@
+---
+repos:
+- repo: https://github.com/ansible/ansible-lint.git
+  rev: v5.3.2
+  hooks:
+  - id: ansible-lint
+    always_run: false
+    pass_filenames: true
+    files: \.(yaml|yml)$
+    exclude: /env[^/]*.(yaml|yml)$
+    entry: |
+        env ANSIBLE_LIBRARY=./plugins/modules ANSIBLE_MODULE_UTILS=./plugins/module_utils ANSIBLE_DOC_FRAGMENT_PLUGINS=./plugins/doc_fragments ansible-lint
+- repo: https://github.com/adrienverge/yamllint.git
+  rev: v1.26.1
+  hooks:
+  - id: yamllint
+    files: \.(yaml|yml)$
+- repo: https://gitlab.com/pycqa/flake8
+  rev: 3.9.2
+  hooks:
+  - id: flake8
+- repo: https://gitlab.com/pycqa/pydocstyle
+  rev: 6.1.1
+  hooks:
+  - id: pydocstyle
+- repo: https://github.com/pycqa/pylint
+  rev: v2.10.2
+  hooks:
+  - id: pylint
+    args:
+    - --disable=import-error
+    files: \.py$
+- repo: local
+  hooks:
+  - id: ansible-doc-test
+    name: Verify Ansible roles and module documentation.
+    language: python
+    entry: utils/ansible-doc-test
+    # args: ['-v', 'roles', 'plugins']
+    files: ^.*.py$
+- repo: local
+  hooks:
+  - id: shellcheck
+    name: ShellCheck
+    language: system
+    entry: shellcheck
+    files: \.sh$

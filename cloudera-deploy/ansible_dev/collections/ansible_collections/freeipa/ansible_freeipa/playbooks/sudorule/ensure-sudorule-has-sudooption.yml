@@ -1,0 +1,13 @@
+---
+- name: Tests
+  hosts: ipaserver
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: Ensure sudooption '!root' is present in sudorule
+    freeipa.ansible_freeipa.ipasudorule:
+      ipaadmin_password: SomeADMINpassword
+      name: testrule1
+      sudooption: "!root"
+      action: member

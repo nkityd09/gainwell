@@ -1,0 +1,105 @@
+---
+- name: Test ipahost random password generation
+  hosts: ipaserver
+  become: true
+
+  tasks:
+  - name: Get Domain from server name
+    set_fact:
+      ipaserver_domain: "{{ ansible_facts['fqdn'].split('.')[1:] | join ('.') }}"
+    when: ipaserver_domain is not defined
+
+  - name: Set host1_fqdn and host2_fqdn
+    set_fact:
+      host1_fqdn: "{{ 'host1.' + ipaserver_domain }}"
+      host2_fqdn: "{{ 'host2.' + ipaserver_domain }}"
+
+  - name: Test hosts absent
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name:
+      - "{{ host1_fqdn }}"
+      - "{{ host2_fqdn }}"
+      update_dns: yes
+      state: absent
+
+  - name: Host "{{ host1_fqdn }}" present with random password
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name: "{{ host1_fqdn }}"
+      random: yes
+      force: yes
+      update_password: on_create
+    register: ipahost
+    failed_when: not ipahost.changed or ipahost.failed
+
+  - name: Assert ipahost.host.randompassword is defined.
+    assert:
+      that:
+      - ipahost.host.randompassword is defined
+
+  - name: Print generated random password
+    debug:
+      var: ipahost.host.randompassword
+
+  - name: Host "{{ host1_fqdn }}" absent
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name:
+      - "{{ host1_fqdn }}"
+      state: absent
+
+  - name: Hosts "{{ host1_fqdn }}" and "{{ host2_fqdn }}" present with random password
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      hosts:
+      - name: "{{ host1_fqdn }}"
+        random: yes
+        force: yes
+      - name: "{{ host2_fqdn }}"
+        random: yes
+        force: yes
+      update_password: on_create
+    register: ipahost
+    failed_when: not ipahost.changed or ipahost.failed
+
+  - name: Assert randompassword is defined for host1 and host2.
+    assert:
+      that:
+      - ipahost.host["{{ host1_fqdn }}"].randompassword is
+        defined
+      - ipahost.host["{{ host2_fqdn }}"].randompassword is
+        defined
+
+  - name: Print generated random password for "{{ host1_fqdn }}"
+    debug:
+      var: ipahost.host["{{ host1_fqdn }}"].randompassword
+
+  - name: Print generated random password for "{{ host2_fqdn }}"
+    debug:
+      var: ipahost.host["{{ host2_fqdn }}"].randompassword
+
+  - name: Enrolled host "{{ ansible_facts['fqdn'] }}" fails to set random password with update_password always
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      hosts:
+      - name: "{{ ansible_facts['fqdn'] }}"
+        random: yes
+      update_password: always
+    register: ipahost
+    failed_when: ipahost.changed or not ipahost.failed
+
+  - name: Assert randompassword is not defined for 'ansible_fqdn'.
+    assert:
+      that:
+      - ipahost.host["{{ ansible_facts['fqdn'] }}"].randompassword is
+        not defined
+      - "'Password cannot be set on enrolled host' in ipahost.msg"
+
+  - name: Hosts "{{ host1_fqdn }}" and "{{ host2_fqdn }}" absent
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name:
+      - "{{ host1_fqdn }}"
+      - "{{ host2_fqdn }}"
+      state: absent

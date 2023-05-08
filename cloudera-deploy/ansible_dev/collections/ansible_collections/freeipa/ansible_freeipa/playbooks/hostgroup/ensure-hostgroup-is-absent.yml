@@ -1,0 +1,11 @@
+---
+- name: Playbook to handle hostgroups
+  hosts: ipaserver
+  become: true
+
+  tasks:
+  - name: Ensure host-group databases is absent
+    freeipa.ansible_freeipa.ipahostgroup:
+      ipaadmin_password: SomeADMINpassword
+      name: databases
+      state: absent

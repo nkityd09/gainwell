@@ -1,0 +1,65 @@
+---
+- name: Test hbacsvc
+  hosts: "{{ ipa_test_host | default('ipaserver') }}"
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: Ensure HBAC Service for http is absent
+    freeipa.ansible_freeipa.ipahbacsvc:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: http,tftp
+      state: absent
+
+  - name: Ensure HBAC Service for http is present
+    freeipa.ansible_freeipa.ipahbacsvc:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: http
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure HBAC Service for http is present again
+    freeipa.ansible_freeipa.ipahbacsvc:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: http
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure HBAC Service for tftp is present
+    freeipa.ansible_freeipa.ipahbacsvc:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: tftp
+      description: TFTP service
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure HBAC Service for tftp is present again
+    freeipa.ansible_freeipa.ipahbacsvc:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: tftp
+      description: TFTP service
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure HBAC Services for http and tftp are absent
+    freeipa.ansible_freeipa.ipahbacsvc:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: http,tftp
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure HBAC Services for http and tftp are absent again
+    freeipa.ansible_freeipa.ipahbacsvc:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: http,tftp
+      state: absent
+    register: result
+    failed_when: result.changed or result.failed

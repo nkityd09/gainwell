@@ -1,0 +1,12 @@
+---
+- name: Playbook to manage IPA role.
+  hosts: ipaserver
+  become: yes
+  gather_facts: no
+
+  tasks:
+  - name: Ensure role is absent.
+    freeipa.ansible_freeipa.iparole:
+      ipaadmin_password: SomeADMINpassword
+      name: somerole
+      state: absent

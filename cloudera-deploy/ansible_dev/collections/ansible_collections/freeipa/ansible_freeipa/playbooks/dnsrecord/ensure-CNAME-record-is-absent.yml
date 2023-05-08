@@ -1,0 +1,13 @@
+---
+- name: Playbook to manage DNS records.
+  hosts: ipaserver
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: Ensure that 'host04' has CNAME, with cname_hostname, is absent
+    freeipa.ansible_freeipa.ipadnsrecord:
+      zone_name: example.com
+      name: host04
+      cname_hostname: host04.example.com
+      state: absent

@@ -1,0 +1,13 @@
+---
+- name: Tests
+  hosts: ipaserver
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: Ensure asymmetric vault is absent.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: asymvault
+      username: admin
+      state: absent

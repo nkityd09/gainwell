@@ -1,0 +1,14 @@
+---
+- name: Tests
+  hosts: ipaserver
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: Ensure host 'server' is absent in sudorule
+    freeipa.ansible_freeipa.ipasudorule:
+      ipaadmin_password: SomeADMINpassword
+      name: testrule1
+      host: server
+      action: member
+      state: absent

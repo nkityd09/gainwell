@@ -1,0 +1,15 @@
+---
+- name: Playbook to manage DNS records.
+  hosts: ipaserver
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: Ensure that dns record is present
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: host01
+      zone_name: example.com
+      ip_address: 192.160.123.45
+      create_reverse: yes
+      state: present

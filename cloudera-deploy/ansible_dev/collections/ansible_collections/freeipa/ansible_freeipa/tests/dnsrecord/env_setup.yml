@@ -1,0 +1,34 @@
+---
+  - name: Setup variables and facts.
+    include_tasks: env_vars.yml
+
+  # Cleanup before setup.
+  - name: Cleanup test environment.
+    include_tasks: env_cleanup.yml
+
+  # Common setup tasks.
+  - name: Ensure DNS testing zones are present.
+    freeipa.ansible_freeipa.ipadnszone:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: "{{ item }}"
+      skip_nameserver_check: yes
+      skip_overlap_check: yes
+    with_items:
+    - "{{ zone_prefix_reverse }}"
+    - "{{ zone_prefix_reverse_24 }}"
+    - "{{ zone_prefix_reverse_16 }}"
+    - "{{ zone_prefix_reverse_8 }}"
+    - "{{ zone_ipv6_reverse_workaround }}"
+    - "{{ testzone }}"
+    - "{{ zone_ipv6_reverse }}"
+
+  - name: Ensure DNSSEC zone '"{{ safezone }}"' is present.
+    freeipa.ansible_freeipa.ipadnszone:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: "{{ safezone }}"
+      dnssec: yes
+      skip_nameserver_check: yes
+      skip_overlap_check: yes
+    ignore_errors: yes

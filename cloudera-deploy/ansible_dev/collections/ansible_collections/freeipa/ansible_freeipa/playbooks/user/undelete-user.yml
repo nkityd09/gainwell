@@ -1,0 +1,11 @@
+---
+- name: Playbook to handle users
+  hosts: ipaserver
+  become: true
+
+  tasks:
+  - name: Undelete preserved user pinky
+    freeipa.ansible_freeipa.ipauser:
+      ipaadmin_password: SomeADMINpassword
+      name: pinky
+      state: undeleted

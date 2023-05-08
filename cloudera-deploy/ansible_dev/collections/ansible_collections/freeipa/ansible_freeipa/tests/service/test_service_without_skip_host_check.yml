@@ -1,0 +1,464 @@
+---
+- name: Test service without using option skip_host_check
+  hosts: ipaserver
+  become: yes
+
+  tasks:
+
+  # setup
+
+  - name: Setup test environment
+    include_tasks: env_setup.yml
+
+  # tests
+  - name: Ensure service is present
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      pac_type:
+        - MS-PAC
+        - PAD
+      auth_ind: otp
+      force: no
+      requires_pre_auth: yes
+      ok_as_delegate: no
+      ok_to_auth_as_delegate: no
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure service is present, again
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      pac_type:
+        - MS-PAC
+        - PAD
+      auth_ind: otp
+      force: no
+      requires_pre_auth: yes
+      ok_as_delegate: no
+      ok_to_auth_as_delegate: no
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Modify service.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      pac_type: NONE
+      ok_as_delegate: yes
+      ok_to_auth_as_delegate: yes
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Modify service, again.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      pac_type: NONE
+      ok_as_delegate: yes
+      ok_to_auth_as_delegate: yes
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure service is present, with host not in DNS.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: HTTP/svc.ihavenodns.info
+      force: yes
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure service is present, with host not in DNS, again.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: HTTP/svc.ihavenodns.info
+      force: yes
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Principal host/test.example.com present in service.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      principal:
+        - host/test.example.com
+      action: member
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Principal host/test.example.com present in service, again.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      principal:
+        - host/test.example.com
+      action: member
+    register: result
+    failed_when:
+      result.changed or (result.failed and "already contains one or more values" not in result.msg)
+
+  - name: Principal host/test.example.com absent in service.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      principal:
+        - host/test.example.com
+      action: member
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Principal host/test.example.com absent in service, again.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      principal:
+        - host/test.example.com
+      action: member
+      state: absent
+    register: result
+    failed_when:
+      result.changed or (result.failed and "does not contain 'one or more values to remove'" not in result.msg)
+
+  - name: Ensure host can manage service.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      host:
+      - "{{ host1_fqdn }}"
+      - "{{ host2_fqdn }}"
+      action: member
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure host can manage service, again.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      host: "{{ host1_fqdn }}"
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure host cannot manage service.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      host:
+      - "{{ host1_fqdn }}"
+      - "{{ host2_fqdn }}"
+      action: member
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure host cannot manage service, again.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      host:
+      - "{{ host1_fqdn }}"
+      - "{{ host2_fqdn }}"
+      action: member
+      state: absent
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Service "HTTP/{{ svc_fqdn }}" members allow_create_keytab present for users, groups, hosts and hostgroups.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      allow_create_keytab_user:
+      - user01
+      - user02
+      allow_create_keytab_group:
+      - group01
+      - group02
+      allow_create_keytab_host:
+      - "{{ host1_fqdn }}"
+      - "{{ host2_fqdn }}"
+      allow_create_keytab_hostgroup:
+      - hostgroup01
+      - hostgroup02
+      action: member
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Service "HTTP/{{ svc_fqdn }}" members allow_create_keytab present for users, groups, hosts and hostgroups, again.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      allow_create_keytab_user:
+      - user01
+      - user02
+      allow_create_keytab_group:
+      - group01
+      - group02
+      allow_create_keytab_host:
+      - "{{ host1_fqdn }}"
+      - "{{ host2_fqdn }}"
+      allow_create_keytab_hostgroup:
+      - hostgroup01
+      - hostgroup02
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Service "HTTP/{{ svc_fqdn }}" members allow_create_keytab absent for users, groups, hosts and hostgroups.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      allow_create_keytab_user:
+      - user01
+      - user02
+      allow_create_keytab_group:
+      - group01
+      - group02
+      allow_create_keytab_host:
+      - "{{ host1_fqdn }}"
+      - "{{ host2_fqdn }}"
+      allow_create_keytab_hostgroup:
+      - hostgroup01
+      - hostgroup02
+      action: member
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Service "HTTP/{{ svc_fqdn }}" members allow_create_keytab absent for users, groups, hosts and hostgroups, again.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      allow_create_keytab_user:
+      - user01
+      - user02
+      allow_create_keytab_group:
+      - group01
+      - group02
+      allow_create_keytab_host:
+      - "{{ host1_fqdn }}"
+      - "{{ host2_fqdn }}"
+      allow_create_keytab_hostgroup:
+      - hostgroup01
+      - hostgroup02
+      action: member
+      state: absent
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Service "HTTP/{{ svc_fqdn }}" members allow_retrieve_keytab present for users, groups, hosts and hostgroups
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      allow_retrieve_keytab_user:
+      - user01
+      - user02
+      allow_retrieve_keytab_group:
+      - group01
+      - group02
+      allow_retrieve_keytab_host:
+      - "{{ host1_fqdn }}"
+      - "{{ host2_fqdn }}"
+      allow_retrieve_keytab_hostgroup:
+      - hostgroup01
+      - hostgroup02
+      action: member
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Service "HTTP/{{ svc_fqdn }}" members allow_retrieve_keytab present for users, groups, hosts and hostgroups, again.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      allow_retrieve_keytab_user:
+      - user01
+      - user02
+      allow_retrieve_keytab_group:
+      - group01
+      - group02
+      allow_retrieve_keytab_host:
+      - "{{ host1_fqdn }}"
+      - "{{ host2_fqdn }}"
+      allow_retrieve_keytab_hostgroup:
+      - hostgroup01
+      - hostgroup02
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Service "HTTP/{{ svc_fqdn }}" members allow_retrieve_keytab absent for users, groups, hosts and hostgroups.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      allow_retrieve_keytab_user:
+      - user01
+      - user02
+      allow_retrieve_keytab_group:
+      - group01
+      - group02
+      allow_retrieve_keytab_host:
+      - "{{ host1_fqdn }}"
+      - "{{ host2_fqdn }}"
+      allow_retrieve_keytab_hostgroup:
+      - hostgroup01
+      - hostgroup02
+      action: member
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Service "HTTP/{{ svc_fqdn }}" members allow_retrieve_keytab absent for users, groups, hosts and hostgroups, again.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      allow_retrieve_keytab_user:
+      - user01
+      - user02
+      allow_retrieve_keytab_group:
+      - group01
+      - group02
+      allow_retrieve_keytab_host:
+      - "{{ host1_fqdn }}"
+      - "{{ host2_fqdn }}"
+      allow_retrieve_keytab_hostgroup:
+      - hostgroup01
+      - hostgroup02
+      action: member
+      state: absent
+    register: result
+    failed_when: result.changed or result.failed
+
+  #
+  - name: Ensure service is absent
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      continue: yes
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure service is absent, again
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "HTTP/{{ svc_fqdn }}"
+      state: absent
+    register: result
+    failed_when: result.changed or result.failed
+
+  # tests for upstream issue #663
+  - name: Ensure service is present with principal alias.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "mysvc/{{ host1_fqdn }}"
+      principal: "asvc/{{ host1_fqdn }}"
+    register: result
+    failed_when: result.failed or not result.changed
+
+  - name: Ensure service is present with principal alias, again.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "mysvc/{{ host1_fqdn }}"
+      principal: "asvc/{{ host1_fqdn }}"
+    register: result
+    failed_when: result.failed or result.changed
+
+  - name: Ensure service is present with different principal alias.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "mysvc/{{ host1_fqdn }}"
+      principal: "HTTP/{{ host1_fqdn }}"
+      force: yes
+    register: result
+    failed_when: result.failed or not result.changed
+
+  - name: Ensure service is presennt with different principal alias, again.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "mysvc/{{ host1_fqdn }}"
+      principal: "HTTP/{{ host1_fqdn }}"
+      force: yes
+    register: result
+    failed_when: result.failed or result.changed
+
+  - name: Ensure service member principal alias is present.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "mysvc/{{ host1_fqdn }}"
+      principal: "asvc/{{ host1_fqdn }}"
+      action: member
+    register: result
+    failed_when: result.failed or not result.changed
+
+  - name: Ensure service member principal alias is present, again.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "mysvc/{{ host1_fqdn }}"
+      principal: "asvc/{{ host1_fqdn }}"
+      action: member
+    register: result
+    failed_when: result.failed or result.changed
+
+  - name: Ensure service member principal alias is absent.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "mysvc/{{ host1_fqdn }}"
+      principal: "asvc/{{ host1_fqdn }}"
+      action: member
+      state: absent
+    register: result
+    failed_when: result.failed or not result.changed
+
+  - name: Ensure service member principal alias is absent, again.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "mysvc/{{ host1_fqdn }}"
+      principal: "asvc/{{ host1_fqdn }}"
+      action: member
+      state: absent
+    register: result
+    failed_when: result.failed or result.changed
+
+  - name: Ensure service is present with multiple principal aliases.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "mysvc/{{ host1_fqdn }}"
+      principal:
+        - "HTTP/{{ host1_fqdn }}"
+        - "asvc/{{ host1_fqdn }}"
+    register: result
+    failed_when: result.failed or not result.changed
+
+  - name: Ensure service is present with multiple principal aliases, again.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "mysvc/{{ host1_fqdn }}"
+      principal:
+        - "HTTP/{{ host1_fqdn }}"
+        - "asvc/{{ host1_fqdn }}"
+    register: result
+    failed_when: result.failed or result.changed
+
+  - name: Ensure service is with multiple principal aliases is absent.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "mysvc/{{ host1_fqdn }}"
+      continue: yes
+      state: absent
+    register: result
+    failed_when: result.failed or not result.changed
+
+  - name: Ensure service is with multiple principal aliases is absent, again.
+    freeipa.ansible_freeipa.ipaservice:
+      ipaadmin_password: SomeADMINpassword
+      name: "mysvc/{{ host1_fqdn }}"
+      continue: yes
+      state: absent
+    register: result
+    failed_when: result.failed or result.changed
+  # end of tests for upstream issue #663
+
+  # cleanup
+  - name: Cleanup test environment
+    include_tasks: env_cleanup.yml

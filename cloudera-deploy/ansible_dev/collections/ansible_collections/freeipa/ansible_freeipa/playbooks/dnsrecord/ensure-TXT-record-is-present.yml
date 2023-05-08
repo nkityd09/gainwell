@@ -1,0 +1,15 @@
+---
+- name: Playbook to manage DNS records.
+  hosts: ipaserver
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: Ensure a TXT record is present
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: _kerberos
+      record_type: 'TXT'
+      record_value: 'EXAMPLE.COM'
+      zone_name: example.com
+      state: present

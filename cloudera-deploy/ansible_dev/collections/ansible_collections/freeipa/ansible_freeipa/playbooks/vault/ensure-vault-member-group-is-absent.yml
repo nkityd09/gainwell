@@ -1,0 +1,15 @@
+---
+- name: Tests
+  hosts: ipaserver
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: Ensure vault member "group" is absent.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: keychain
+      username: admin
+      state: absent
+      action: member
+      groups: ipausers

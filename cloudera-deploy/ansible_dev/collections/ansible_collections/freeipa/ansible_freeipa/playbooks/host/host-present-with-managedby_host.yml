@@ -1,0 +1,12 @@
+---
+- name: Host present with managedby_host
+  hosts: ipaserver
+  become: true
+
+  tasks:
+  - name: Ensure host is present with managedby_host attribute.
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      name: host01.example.com
+      managedby_host: server.example.com
+      force: yes

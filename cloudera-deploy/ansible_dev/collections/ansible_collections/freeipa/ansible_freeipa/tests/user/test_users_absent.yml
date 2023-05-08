@@ -1,0 +1,24 @@
+---
+- name: Include create_users_json.yml
+  import_playbook: create_users_json.yml
+
+- name: Test users absent
+  hosts: ipaserver
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: Include users.json
+    include_vars:
+      file: users.json  # noqa 505
+
+  - name: Create dict with user names
+    set_fact:
+      user_names: "{{ user_names | default([]) + [{ 'name': item.name }] }}"
+    loop: "{{ users }}"
+
+  - name: Users absent len:{{ users | length }}
+    freeipa.ansible_freeipa.ipauser:
+      ipaadmin_password: SomeADMINpassword
+      users: "{{ user_names }}"
+      state: absent

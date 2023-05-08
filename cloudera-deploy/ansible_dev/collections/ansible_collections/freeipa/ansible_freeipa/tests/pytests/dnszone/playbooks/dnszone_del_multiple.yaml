@@ -1,0 +1,11 @@
+---
+- name: Playbook to ensure remove multiple dnszone.
+  hosts: ipaserver
+  become: true
+
+  tasks:
+  - name: Ensure multiple DNS are absent
+    ipadnszone:
+      ipaadmin_password: SomeADMINpassword
+      name: delzone1.com,delzone2.com,delzone3.com
+      state: absent

@@ -1,0 +1,12 @@
+---
+- name: Tests
+  hosts: ipaserver
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: Ensure HBAC Rule allhosts is absent
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      name: allhosts
+      state: absent

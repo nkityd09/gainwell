@@ -1,0 +1,55 @@
+---
+  # Tasks executed to ensure a sane environment to test IPA Vault module.
+  - name: Ensure environment is clean.
+    import_tasks: env_cleanup.yml
+
+  - name: Create private/public key pair.
+    shell:
+      cmd: |
+        openssl genrsa -out "{{ item }}private.pem" 2048
+        openssl rsa -in "{{ item }}private.pem" -outform PEM -pubout -out "{{ item }}public.pem"
+        base64 "{{ item }}public.pem" -w5000 > "{{ item }}public.b64"
+        base64 "{{ item }}private.pem" -w5000 > "{{ item }}private.b64"
+    delegate_to: localhost
+    become: no
+    with_items:
+    - A_
+    - B_
+
+  - name: Copy files to target host.
+    copy:
+      src: "{{ playbook_dir }}/{{ item }}"
+      dest: "{{ ansible_facts['env'].HOME }}/{{ item }}"
+      mode: 0644
+    with_items:
+    - A_private.pem
+    - A_public.pem
+    - B_private.pem
+    - B_public.pem
+    - A_private.b64
+    - A_public.b64
+    - B_private.b64
+    - B_public.b64
+    - password.txt
+    - in.txt
+
+  - name: Ensure vaultgroup exists.
+    freeipa.ansible_freeipa.ipagroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: vaultgroup
+
+  - name: Ensure testing users exist.
+    freeipa.ansible_freeipa.ipauser:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      users:
+      - name: user01
+        first: First
+        last: Start
+      - name: user02
+        first: Second
+        last: Middle
+      - name: user03
+        first: Third
+        last: Last

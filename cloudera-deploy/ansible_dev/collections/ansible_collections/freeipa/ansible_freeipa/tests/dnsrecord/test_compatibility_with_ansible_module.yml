@@ -1,0 +1,274 @@
+---
+- name: Test compatibility with Ansible ipa_dnsrecord module.
+  hosts: ipaserver
+  become: true
+  gather_facts: false
+
+  tasks:
+
+  # setup
+  - name: Ensure DNS zones to be used are absent.
+    freeipa.ansible_freeipa.ipadnszone:
+      ipaadmin_password: SomeADMINpassword
+      name: "{{ item }}"
+      state: absent
+    with_items:
+      - testzone.local
+      - 2.168.192.in-addr.arpa
+
+  - name: Ensure DNS zones to be used are present.
+    freeipa.ansible_freeipa.ipadnszone:
+      ipaadmin_password: SomeADMINpassword
+      name: "{{ item }}"
+    with_items:
+      - testzone.local
+      - 2.168.192.in-addr.arpa
+
+  - name: Ensure that dns record 'host01' is absent
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: host01
+      zone_name: testzone.local
+      del_all: yes
+      state: absent
+
+  - name: Ensure that dns records for 'vm-001' are absent
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: vm-001
+      zone_name: testzone.local
+      del_all: yes
+      state: absent
+
+  - name: Ensure a PTR record is absent for 'vm-001'
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: '1'
+      record_type: 'PTR'
+      record_value: 'vm-001'
+      zone_name: 2.168.192.in-addr.arpa
+      state: absent
+
+  - name: Ensure a PTR record is absent
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      zone_name: 2.168.192.in-addr.arpa
+      name: "5"
+      del_all: yes
+      state: absent
+
+  - name: Ensure a TXT record is absent
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: _kerberos
+      record_type: 'TXT'
+      record_value: 'TESTZONE.LOCAL'
+      zone_name: testzone.local
+      state: absent
+
+  - name: Ensure a SRV record is absent
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: _kerberos._udp.testzone.local
+      record_type: 'SRV'
+      record_value: '10 50 88 ipa.testzone.local'
+      zone_name: testzone.local
+      state: absent
+
+  - name: Ensure an MX record is absent
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: '@'
+      record_type: 'MX'
+      record_value: '1 mailserver.testzone.local'
+      zone_name: testzone.local
+      state: absent
+
+  # tests
+  - name: Ensure AAAA  dns record is present
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: vm-001
+      record_type: 'AAAA'
+      record_value: '::1'
+      zone_name: testzone.local
+      state: present
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure that AAAA dns record exists with a TTL
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: host01
+      record_type: 'AAAA'
+      record_value: '::1'
+      record_ttl: 300
+      zone_name: testzone.local
+      state: present
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure a PTR record is present
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: '5'
+      record_type: 'PTR'
+      record_value: 'internal.ipa.testzone.local'
+      zone_name: 2.168.192.in-addr.arpa
+      state: present
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure A record is present, with reverse
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: vm-001
+      record_type: 'A'
+      record_value: '192.168.2.1'
+      create_reverse: yes
+      zone_name: testzone.local
+      state: present
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure A record is present
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: vm-001
+      record_type: 'A'
+      record_value: '192.168.2.1'
+      zone_name: testzone.local
+      state: present
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure PTR record is present
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: '1'
+      record_type: 'PTR'
+      record_value: vm-001.testzone.local
+      zone_name: 2.168.192.in-addr.arpa
+      state: present
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure a TXT record is present
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: _kerberos
+      record_type: 'TXT'
+      record_value: 'TESTZONE.LOCAL'
+      zone_name: testzone.local
+      state: present
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure a SRV record is present
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: _kerberos._udp.testzone.local
+      record_type: 'SRV'
+      record_value: '10 50 88 ipa.testzone.local'
+      zone_name: testzone.local
+      state: present
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure an MX record is present
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: '@'
+      record_type: 'MX'
+      record_value: '1 mailserver.testzone.local'
+      zone_name: testzone.local
+      state: present
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure that dns record is removed
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: host01
+      zone_name: testzone.local
+      record_type: 'AAAA'
+      record_value: '::1'
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  # cleanup
+  - name: Ensure that dns record 'host01' is absent
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: host01
+      zone_name: testzone.local
+      record_type: 'AAAA'
+      record_value: '::1'
+      state: absent
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure that dns record 'vm-001' is absent
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: vm-001
+      zone_name: testzone.local
+      record_type: 'AAAA'
+      record_value: '::1'
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure a PTR record is absent
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: 5
+      record_type: 'PTR'
+      record_value: 'internal.ipa.testzone.local'
+      zone_name: 2.168.192.in-addr.arpa
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure a TXT record is absent
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: _kerberos
+      record_type: 'TXT'
+      record_value: 'TESTZONE.LOCAL'
+      zone_name: testzone.local
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure a SRV record is absent
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: _kerberos._udp.testzone.local
+      record_type: 'SRV'
+      record_value: '10 50 88 ipa.testzone.local'
+      zone_name: testzone.local
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure an MX record is absent
+    freeipa.ansible_freeipa.ipadnsrecord:
+      ipaadmin_password: SomeADMINpassword
+      name: '@'
+      record_type: 'MX'
+      record_value: '1 mailserver.testzone.local'
+      zone_name: testzone.local
+      state: absent
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure DNS zones to be used are absent.
+    freeipa.ansible_freeipa.ipadnszone:
+      ipaadmin_password: SomeADMINpassword
+      name: "{{ item }}"
+      state: absent
+    with_items:
+      - testzone.local
+      - 2.168.192.in-addr.arpa

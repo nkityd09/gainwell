@@ -1,0 +1,13 @@
+---
+- name: Permission absent example
+  hosts: ipaserver
+  become: true
+
+  tasks:
+  - name: Ensure permission privilege, "User Administrators", is absent
+    freeipa.ansible_freeipa.ipapermission:
+      ipaadmin_password: SomeADMINpassword
+      name: TestPerm1
+      privilege: "User Administrators"
+      action: member
+      state: absent

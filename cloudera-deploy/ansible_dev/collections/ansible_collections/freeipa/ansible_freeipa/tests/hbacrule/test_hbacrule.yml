@@ -1,0 +1,718 @@
+---
+- name: Test hbacrule
+  hosts: "{{ ipa_test_host | default('ipaserver') }}"
+  become: true
+
+  tasks:
+  - name: Get Domain from server name
+    set_fact:
+      ipaserver_domain: "{{ ansible_facts['fqdn'].split('.')[1:] | join ('.') }}"
+    when: ipaserver_domain is not defined
+
+  # CLEANUP TEST ITEMS
+
+  - name: Ensure test hosts are absent
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name:
+      - "{{ 'testhost01.' + ipaserver_domain }}"
+      - "{{ 'testhost02.' + ipaserver_domain }}"
+      - "{{ 'testhost03.' + ipaserver_domain }}"
+      - "{{ 'testhost04.' + ipaserver_domain }}"
+      state: absent
+
+  - name: Ensure test hostgroups are absent
+    freeipa.ansible_freeipa.ipahostgroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testhostgroup01,testhostgroup02,testhostgroup03,testhostgroup04
+      state: absent
+
+  - name: Ensure test users are absent
+    freeipa.ansible_freeipa.ipauser:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testuser01,testuser02,testuser03,testuser04
+      state: absent
+
+  - name: Ensure test user groups are absent
+    freeipa.ansible_freeipa.ipagroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testgroup01,testgroup02,testgroup03,testgroup04
+      state: absent
+
+  - name: Ensure test HBAC Services are absent
+    freeipa.ansible_freeipa.ipahbacsvc:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testhbacsvc01,testhbacsvc02,testhbacsvc03,testhbacsvc04
+      state: absent
+
+  - name: Ensure test HBAC Service Groups are absent
+    freeipa.ansible_freeipa.ipahbacsvcgroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testhbacsvcgroup01,testhbacsvcgroup02,testhbacsvcgroup03,testhbacsvcgroup04
+      state: absent
+
+  # CREATE TEST ITEMS
+
+  - name: Ensure hosts "{{ 'host[1..4].' + ipaserver_domain }}" are present
+    freeipa.ansible_freeipa.ipahost:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      hosts:
+      - name: "{{ 'testhost01.' + ipaserver_domain }}"
+        force: yes
+      - name: "{{ 'testhost02.' + ipaserver_domain }}"
+        force: yes
+      - name: "{{ 'testhost03.' + ipaserver_domain }}"
+        force: yes
+      - name: "{{ 'testhost04.' + ipaserver_domain }}"
+        force: yes
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure host-group testhostgroup01 is present
+    freeipa.ansible_freeipa.ipahostgroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testhostgroup01
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure host-group testhostgroup02 is present
+    freeipa.ansible_freeipa.ipahostgroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testhostgroup02
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure host-group testhostgroup03 is present
+    freeipa.ansible_freeipa.ipahostgroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testhostgroup03
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure host-group testhostgroup04 is present
+    freeipa.ansible_freeipa.ipahostgroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testhostgroup04
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure testusers are present
+    freeipa.ansible_freeipa.ipauser:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      users:
+      - name: testuser01
+        first: test
+        last: user01
+      - name: testuser02
+        first: test
+        last: user02
+      - name: testuser03
+        first: test
+        last: user03
+      - name: testuser04
+        first: test
+        last: user04
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure user group testgroup01 is present
+    freeipa.ansible_freeipa.ipagroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testgroup01
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure user group testgroup02 is present
+    freeipa.ansible_freeipa.ipagroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testgroup02
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure user group testgroup03 is present
+    freeipa.ansible_freeipa.ipagroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testgroup03
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure user group testgroup04 is present
+    freeipa.ansible_freeipa.ipagroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testgroup04
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure HBAC Service testhbacsvc01 is present
+    freeipa.ansible_freeipa.ipahbacsvc:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testhbacsvc01
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure HBAC Service testhbacsvc02 is present
+    freeipa.ansible_freeipa.ipahbacsvc:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testhbacsvc02
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure HBAC Service testhbacsvc03 is present
+    freeipa.ansible_freeipa.ipahbacsvc:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testhbacsvc03
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure HBAC Service testhbacsvc04 is present
+    freeipa.ansible_freeipa.ipahbacsvc:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testhbacsvc04
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure HBAC Service Group testhbacsvcgroup01 is present
+    freeipa.ansible_freeipa.ipahbacsvcgroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testhbacsvcgroup01
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure HBAC Service Group testhbacsvcgroup02 is present
+    freeipa.ansible_freeipa.ipahbacsvcgroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testhbacsvcgroup02
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure HBAC Service Group testhbacsvcgroup03 is present
+    freeipa.ansible_freeipa.ipahbacsvcgroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testhbacsvcgroup03
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure HBAC Service Group testhbacsvcgroup04 is present
+    freeipa.ansible_freeipa.ipahbacsvcgroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testhbacsvcgroup04
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 is absent
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      state: absent
+
+  # ENSURE HBACRULE
+
+  - name: Ensure HBAC rule hbacrule01 is present
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure HBAC rule hbacrule01 is present again
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+    register: result
+    failed_when: result.changed or result.failed
+
+  # CHANGE HBACRULE WITH ALL MEMBERS
+
+  - name: Ensure HBAC rule hbacrule01 is present with hosts, hostgroups, users, groups, hbassvcs and hbacsvcgroups
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      host:
+      - "{{ 'testhost01.' + ipaserver_domain }}"
+      - "{{ 'testhost02.' + ipaserver_domain }}"
+      hostgroup: testhostgroup01,testhostgroup02
+      user: testuser01,testuser02
+      group: testgroup01,testgroup02
+      hbacsvc: testhbacsvc01,testhbacsvc02
+      hbacsvcgroup: testhbacsvcgroup01,testhbacsvcgroup02
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure HBAC rule hbacrule01 is present with hosts, hostgroups, users, groups, hbassvcs and hbacsvcgroups again
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      host:
+      - "{{ 'testhost01.' + ipaserver_domain }}"
+      - "{{ 'testhost02.' + ipaserver_domain }}"
+      hostgroup: testhostgroup01,testhostgroup02
+      user: testuser01,testuser02
+      group: testgroup01,testgroup02
+      hbacsvc: testhbacsvc01,testhbacsvc02
+      hbacsvcgroup: testhbacsvcgroup01,testhbacsvcgroup02
+    register: result
+    failed_when: result.changed or result.failed
+
+  # REMOVE MEMBERS ONE BY ONE
+
+  - name: Ensure test HBAC rule hbacrule01 host members are absent
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      host:
+      - "{{ 'testhost01.' + ipaserver_domain }}"
+      - "{{ 'testhost02.' + ipaserver_domain }}"
+      state: absent
+      action: member
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 host members are absent again
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      host:
+      - "{{ 'testhost01.' + ipaserver_domain }}"
+      - "{{ 'testhost02.' + ipaserver_domain }}"
+      state: absent
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 hostgroup members are absent
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      hostgroup: testhostgroup01,testhostgroup02
+      state: absent
+      action: member
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 hostgroup members are absent again
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      hostgroup: testhostgroup01,testhostgroup02
+      state: absent
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 user members are absent
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      user: testuser01,testuser02
+      state: absent
+      action: member
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 user members are absent again
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      user: testuser01,testuser02
+      state: absent
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 user group members are absent
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      group: testgroup01,testgroup02
+      state: absent
+      action: member
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 user group members are absent again
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      group: testgroup01,testgroup02
+      state: absent
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 hbacsvc members are absent
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      hbacsvc: testhbacsvc01,testhbacsvc02
+      state: absent
+      action: member
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 hbacsvc members are absent again
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      hbacsvc: testhbacsvc01,testhbacsvc02
+      state: absent
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 hbacsvcgroup members are absent
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      hbacsvcgroup: testhbacsvcgroup01,testhbacsvcgroup02
+      state: absent
+      action: member
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 hbacsvcgroup members are absent again
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      hbacsvcgroup: testhbacsvcgroup01,testhbacsvcgroup02
+      state: absent
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  # ADD MEMBERS BACK
+
+  - name: Ensure test HBAC rule hbacrule01 host members are present
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      host:
+      - "{{ 'testhost01.' + ipaserver_domain }}"
+      - "{{ 'testhost02.' + ipaserver_domain }}"
+      action: member
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 host members are present again
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      host:
+      - "{{ 'testhost01.' + ipaserver_domain }}"
+      - "{{ 'testhost02.' + ipaserver_domain }}"
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 hostgroup members are present
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      hostgroup: testhostgroup01,testhostgroup02
+      action: member
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 hostgroup members are present again
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      hostgroup: testhostgroup01,testhostgroup02
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 user members are present
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      user: testuser01,testuser02
+      action: member
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 user members are present again
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      user: testuser01,testuser02
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 user group members are present
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      group: testgroup01,testgroup02
+      action: member
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 user group members are present again
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      group: testgroup01,testgroup02
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 hbacsvc members are present
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      hbacsvc: testhbacsvc01,testhbacsvc02
+      action: member
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 hbacsvc members are present again
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      hbacsvc: testhbacsvc01,testhbacsvc02
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 hbacsvcgroup members are present
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      hbacsvcgroup: testhbacsvcgroup01,testhbacsvcgroup02
+      action: member
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure test HBAC rule hbacrule01 hbacsvcgroup members are present again
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      hbacsvcgroup: testhbacsvcgroup01,testhbacsvcgroup02
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  # CHANGE TO DIFFERENT MEMBERS
+
+  - name: Ensure HBAC rule hbacrule01 is present with different hosts, hostgroups, users, groups, hbassvcs and hbacsvcgroups
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      host:
+      - "{{ 'testhost03.' + ipaserver_domain }}"
+      - "{{ 'testhost04.' + ipaserver_domain }}"
+      hostgroup: testhostgroup03,testhostgroup04
+      user: testuser03,testuser04
+      group: testgroup03,testgroup04
+      hbacsvc: testhbacsvc03,testhbacsvc04
+      hbacsvcgroup: testhbacsvcgroup03,testhbacsvcgroup04
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure HBAC rule hbacrule01 is present with different hosts, hostgroups, users, groups, hbassvcs and hbacsvcgroups again
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      host:
+      - "{{ 'testhost03.' + ipaserver_domain }}"
+      - "{{ 'testhost04.' + ipaserver_domain }}"
+      hostgroup: testhostgroup03,testhostgroup04
+      user: testuser03,testuser04
+      group: testgroup03,testgroup04
+      hbacsvc: testhbacsvc03,testhbacsvc04
+      hbacsvcgroup: testhbacsvcgroup03,testhbacsvcgroup04
+    register: result
+    failed_when: result.changed or result.failed
+
+  # ENSURE OLD TEST MEMBERS ARE ABSENT
+
+  - name: Ensure HBAC rule hbacrule01 members (same) are present
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      host:
+      - "{{ 'testhost01.' + ipaserver_domain }}"
+      - "{{ 'testhost02.' + ipaserver_domain }}"
+      hostgroup: testhostgroup01,testhostgroup02
+      user: testuser01,testuser02
+      group: testgroup01,testgroup02
+      hbacsvc: testhbacsvc01,testhbacsvc02
+      hbacsvcgroup: testhbacsvcgroup01,testhbacsvcgroup02
+      state: absent
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  # ENSURE NEW TEST MEMBERS ARE ABSENT
+
+  - name: Ensure HBAC rule hbacrule01 members are absent
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      host:
+      - "{{ 'testhost03.' + ipaserver_domain }}"
+      - "{{ 'testhost04.' + ipaserver_domain }}"
+      hostgroup: testhostgroup03,testhostgroup04
+      user: testuser03,testuser04
+      group: testgroup03,testgroup04
+      hbacsvc: testhbacsvc03,testhbacsvc04
+      hbacsvcgroup: testhbacsvcgroup03,testhbacsvcgroup04
+      state: absent
+      action: member
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure HBAC rule hbacrule01 members are absent again
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      host:
+      - "{{ 'testhost03.' + ipaserver_domain }}"
+      - "{{ 'testhost04.' + ipaserver_domain }}"
+      hostgroup: testhostgroup03,testhostgroup04
+      user: testuser03,testuser04
+      group: testgroup03,testgroup04
+      hbacsvc: testhbacsvc03,testhbacsvc04
+      hbacsvcgroup: testhbacsvcgroup03,testhbacsvcgroup04
+      state: absent
+      action: member
+    register: result
+    failed_when: result.changed or result.failed
+
+  # ENSURE SIMPLE HOSTNAMES MATCH
+
+  - name: Ensure HBAC rule hbacrule01 simple host members are usable
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      host:
+      - "testhost01"
+      - "testhost03"
+    register: result
+    failed_when: not result.changed or result.failed
+
+  - name: Ensure HBAC rule hbacrule01 simple host members are usable again (and match)
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      host:
+      - "testhost01"
+      - "testhost03"
+    register: result
+    failed_when: result.changed or result.failed
+
+  # CLEANUP TEST ITEMS
+
+  - name: Ensure test HBAC rule hbacrule01 is absent
+    freeipa.ansible_freeipa.ipahbacrule:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: hbacrule01
+      state: absent
+
+  - name: Ensure test hosts are absent
+    freeipa.ansible_freeipa.ipahostgroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name:
+      - "{{ 'testhost01.' + ipaserver_domain }}"
+      - "{{ 'testhost02.' + ipaserver_domain }}"
+      - "{{ 'testhost03.' + ipaserver_domain }}"
+      - "{{ 'testhost04.' + ipaserver_domain }}"
+      state: absent
+
+  - name: Ensure test hostgroups are absent
+    freeipa.ansible_freeipa.ipahostgroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testhostgroup01,testhostgroup02,testhostgroup03,testhostgroup04
+      state: absent
+
+  - name: Ensure test users are absent
+    freeipa.ansible_freeipa.ipauser:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testuser01,testuser02,testuser03,testuser04
+      state: absent
+
+  - name: Ensure test user groups are absent
+    freeipa.ansible_freeipa.ipagroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testgroup01,testgroup02,testgroup03,testgroup04
+      state: absent
+
+  - name: Ensure test HBAC Services are absent
+    freeipa.ansible_freeipa.ipahbacsvc:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testhbacsvc01,testhbacsvc02,testhbacsvc03,testhbacsvc04
+      state: absent
+
+  - name: Ensure test HBAC Service Groups are absent
+    freeipa.ansible_freeipa.ipahbacsvcgroup:
+      ipaadmin_password: SomeADMINpassword
+      ipaapi_context: "{{ ipa_context | default(omit) }}"
+      name: testhbacsvcgroup01,testhbacsvcgroup02,testhbacsvcgroup03,testhbacsvcgroup04
+      state: absent

@@ -1,0 +1,8 @@
+---
+- name: Playbook to backup IPA server
+  hosts: ipaserver
+  become: true
+
+  roles:
+  - role: freeipa.ansible_freeipa.ipabackup
+    state: present

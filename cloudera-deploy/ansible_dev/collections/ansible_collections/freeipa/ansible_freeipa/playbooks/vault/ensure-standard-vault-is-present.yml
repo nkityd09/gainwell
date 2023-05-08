@@ -1,0 +1,14 @@
+---
+- name: Tests
+  hosts: ipaserver
+  become: true
+  gather_facts: false
+
+  tasks:
+  - name: Ensure standard vault is present.
+    freeipa.ansible_freeipa.ipavault:
+      ipaadmin_password: SomeADMINpassword
+      name: stdvault
+      vault_type: standard
+      username: admin
+      description: A standard private vault.
