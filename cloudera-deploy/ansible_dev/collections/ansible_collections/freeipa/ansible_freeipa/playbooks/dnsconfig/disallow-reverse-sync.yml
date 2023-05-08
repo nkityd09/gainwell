@@ -1,9 +1,0 @@
----
-- name: Playbook to disallow reverse record synchronization.
-  hosts: ipaserver
-  become: true
-
-  tasks:
-  - name: Disallow reverse record synchronization.
-    freeipa.ansible_freeipa.ipadnsconfig:
-      allow_sync_ptr: no

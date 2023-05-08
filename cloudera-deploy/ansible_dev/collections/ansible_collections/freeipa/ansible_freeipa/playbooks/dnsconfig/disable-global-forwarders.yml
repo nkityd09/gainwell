@@ -1,9 +1,0 @@
----
-- name: Playbook to disable global DNS forwarders
-  hosts: ipaserver
-  become: true
-
-  tasks:
-  - name: Disable global forwarders.
-    freeipa.ansible_freeipa.ipadnsconfig:
-      forward_policy: none

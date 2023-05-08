@@ -1,3 +1,0 @@
----
-- name: Cleanup test environment.
-  include_tasks: env_cleanup.yml

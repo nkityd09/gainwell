@@ -1,8 +1,0 @@
-download_url: https://galaxy.ansible.com/download/netapp-azure-21.10.0.tar.gz
-format_version: 1.0.0
-name: azure
-namespace: netapp
-server: https://galaxy.ansible.com/api/
-signatures: []
-version: 21.10.0
-version_url: https://galaxy.ansible.com/api/v2/collections/netapp/azure/versions/21.10.0/
